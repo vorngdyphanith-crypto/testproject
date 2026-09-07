@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UrbanWear | Shop</title>
+
+    <link rel="stylesheet" href="css/shop.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a class="logo" href="index.html">
+        Urban<span>Wear</span>
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+
+        <a class="active" href="shop.html">
+            Shop
+        </a>
+
+        <a href="cart.html">
+            Cart <b id="cartCount">0</b>
+        </a>
+
+        <a id="loginLink" href="login.html">
+            Login
+        </a>
+
+        <a id="staffLink" class="hidden" href="staff.html">
+            Staff
+        </a>
+
+        <a id="logoutLink" class="hidden" href="#">
+            Logout
+        </a>
+    </nav>
+
+</header>
+
+
+<main class="section shop-page">
+
+    <div class="section-head">
+
+        <div>
+            <p class="eyebrow">
+                OUR STORE
+            </p>
+
+            <h1>
+                Shop all
+            </h1>
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+    <div class="filters">
+
+        <button
+            class="filter active"
+            data-cat="All">
+            All
+        </button>
+
+        <button
+            class="filter"
+            data-cat="Men">
+            Men
+        </button>
+
+        <button
+            class="filter"
+            data-cat="Women">
+            Women
+        </button>
+
+        <button
+            class="filter"
+            data-cat="Shoes">
+            Shoes
+        </button>
+
+        <button
+            class="filter"
+            data-cat="Accessories">
+            Accessories
+        </button>
+
+
+        <!-- SORT -->
+        <select id="sort">
+
+            <option value="default">
+                Sort by
+            </option>
+
+            <option value="low">
+                Price: Low to High
+            </option>
+
+            <option value="high">
+                Price: High to Low
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+    <div
+        id="shopProducts"
+        class="product-grid">
+    </div>
+
+</main>
+
+
+<footer>
+    © 2026 UrbanWear. All rights reserved.
+</footer>
+
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

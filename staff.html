@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+
+    <h2>UrbanWear Staff</h2>
+
+    <nav>
+
+        <a href="index.html">
+            Website
+        </a>
+
+        <button onclick="logout()">
+            Logout
+        </button>
+
+    </nav>
+
+</header>
+
+
+<div class="container">
+
+    <h1>Staff Dashboard</h1>
+
+
+    <!-- ADD PRODUCT -->
+
+    <div class="admin-form">
+
+        <h2>Add Product</h2>
+
+        <input
+            type="text"
+            id="productName"
+            placeholder="Product Name"
+        >
+
+        <input
+            type="number"
+            id="productPrice"
+            placeholder="Price"
+        >
+
+        <input
+            type="number"
+            id="productStock"
+            placeholder="Stock"
+        >
+
+        <input
+            type="text"
+            id="productImage"
+            placeholder="Image URL"
+        >
+
+        <button onclick="addProduct()">
+            Add Product
+        </button>
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+
+    <h2>Products</h2>
+
+    <div id="adminProducts"></div>
+
+
+    <!-- USERS -->
+
+    <h2>Registered Users</h2>
+
+    <div id="usersList"></div>
+
+</div>
+
+
+<script src="js/staff.js"></script>
+
+</body>
+</html>
