@@ -83,7 +83,7 @@ const products = [
         price: 35,
         image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80"
     }
-
+    
 ];
 
 
