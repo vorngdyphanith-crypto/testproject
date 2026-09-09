@@ -155,7 +155,9 @@ function openCheckoutModal() {
 
   if (currentUser) {
     if (nameInput) {
-      nameInput.value = `${currentUser.first_name || ""} ${currentUser.last_name || ""}`.trim() || currentUser.email.split("@")[0];
+      nameInput.value =
+        `${currentUser.first_name || ""} ${currentUser.last_name || ""}`.trim() ||
+        currentUser.email.split("@")[0];
     }
     if (emailInput) {
       emailInput.value = currentUser.email || "";

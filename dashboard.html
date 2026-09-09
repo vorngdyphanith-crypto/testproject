@@ -661,7 +661,11 @@
           <button
             onclick="handleResetStoreData()"
             class="btn-primary"
-            style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;"
+            style="
+              background: #fee2e2;
+              color: #dc2626;
+              border: 1px solid #fca5a5;
+            "
             title="Cleanse any old items like Lemon Soda and reload clean UrbanWear catalog"
           >
             🧹 Cleanse & Reset Data
@@ -1389,7 +1393,7 @@
       function handleResetStoreData() {
         if (
           confirm(
-            "Reset store to clean official UrbanWear catalog? This will remove any stale mini-market items (such as Lemon Soda), reset products, and empty your cart."
+            "Reset store to clean official UrbanWear catalog? This will remove any stale mini-market items (such as Lemon Soda), reset products, and empty your cart.",
           )
         ) {
           Store.resetToCleanState();
