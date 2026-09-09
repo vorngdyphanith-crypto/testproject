@@ -1,41 +1,354 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UrbanWear - Home</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<header>
-    <h2>UrbanWear</h2>
-
-    <nav>
-        <a href="index.html">Home</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanWear | Modern Fashion & Streetwear</title>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
+        <a class="active" href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <b id="cartCount">0</b></a>
         <a href="login.html">Login</a>
         <a href="register.html">Register</a>
-        <a href="shop.html">Shop</a>
-        <a href="cart.html">Cart 🛒</a>
-        
-    </nav>
-</header>
+      </nav>
+    </header>
 
-<section class="hero">
-    <div>
-        <h1>New Fashion Collection</h1>
-        <p>Style your life with UrbanWear.</p>
-        <a href="shop.html" class="btn">Shop Now</a>
-    </div>
-</section>
+    <!-- HERO SECTION -->
+    <section
+      class="hero"
+      style="
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+          url(&quot;https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80&quot;)
+            center/cover no-repeat;
+        height: 520px;
+        display: flex;
+        align-items: center;
+        color: white;
+        padding: 0 8%;
+      "
+    >
+      <div style="max-width: 650px">
+        <p
+          style="
+            color: #d4af37;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-size: 14px;
+          "
+        >
+          Season 2026 Collection
+        </p>
+        <h1
+          style="
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 18px;
+          "
+        >
+          Style Your Life with UrbanWear
+        </h1>
+        <p
+          style="
+            font-size: 18px;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+          "
+        >
+          Discover contemporary clothing, precision shoes, and elevated
+          streetwear built for the modern urban rhythm.
+        </p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap">
+          <a
+            href="shop.html"
+            class="btn"
+            style="
+              background: #d4af37;
+              color: #111;
+              font-weight: 700;
+              padding: 14px 32px;
+              border-radius: 6px;
+              text-decoration: none;
+              font-size: 15px;
+            "
+            >Shop Now</a
+          >
+          <a
+            href="shop.html"
+            class="btn"
+            style="
+              background: transparent;
+              border: 2px solid white;
+              color: white;
+              font-weight: 600;
+              padding: 12px 28px;
+              border-radius: 6px;
+              text-decoration: none;
+              font-size: 15px;
+            "
+            >Explore All</a
+          >
+        </div>
+      </div>
+    </section>
 
-<section class="container">
-    <h2>Welcome to UrbanWear</h2>
-    <p>
-        Discover modern clothes, shoes and accessories
-        for your everyday style.
-    </p>
-</section>
+    <!-- VALUE PROPS -->
+    <section
+      style="background: white; border-bottom: 1px solid #eee; padding: 30px 7%"
+    >
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 25px;
+          text-align: center;
+        "
+      >
+        <div style="padding: 15px">
+          <div style="font-size: 28px; margin-bottom: 8px">🚚</div>
+          <h4 style="font-size: 16px; margin-bottom: 5px">
+            Free Express Shipping
+          </h4>
+          <p style="color: #777; font-size: 13px">On all orders over $50.00</p>
+        </div>
+        <div style="padding: 15px">
+          <div style="font-size: 28px; margin-bottom: 8px">✨</div>
+          <h4 style="font-size: 16px; margin-bottom: 5px">Premium Materials</h4>
+          <p style="color: #777; font-size: 13px">
+            100% sustainable organic cotton
+          </p>
+        </div>
+        <div style="padding: 15px">
+          <div style="font-size: 28px; margin-bottom: 8px">🔄</div>
+          <h4 style="font-size: 16px; margin-bottom: 5px">
+            30 Days Free Return
+          </h4>
+          <p style="color: #777; font-size: 13px">
+            Hassle-free exchanges guaranteed
+          </p>
+        </div>
+        <div style="padding: 15px">
+          <div style="font-size: 28px; margin-bottom: 8px">🔒</div>
+          <h4 style="font-size: 16px; margin-bottom: 5px">Secure Checkout</h4>
+          <p style="color: #777; font-size: 13px">
+            Protected transactions & payments
+          </p>
+        </div>
+      </div>
+    </section>
 
-</body>
+    <!-- CATEGORIES -->
+    <section class="section" style="padding: 60px 0 30px">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">CURATED COLLECTIONS</p>
+          <h2>Shop by Category</h2>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 20px;
+        "
+      >
+        <div
+          onclick="window.location.href = 'shop.html'"
+          style="
+            cursor: pointer;
+            position: relative;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <img
+            src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+          <div
+            style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.7),
+                transparent
+              );
+              display: flex;
+              align-items: flex-end;
+              padding: 20px;
+            "
+          >
+            <h3 style="color: white; font-size: 20px">Men's Wear →</h3>
+          </div>
+        </div>
+        <div
+          onclick="window.location.href = 'shop.html'"
+          style="
+            cursor: pointer;
+            position: relative;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <img
+            src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+          <div
+            style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.7),
+                transparent
+              );
+              display: flex;
+              align-items: flex-end;
+              padding: 20px;
+            "
+          >
+            <h3 style="color: white; font-size: 20px">Women's Fashion →</h3>
+          </div>
+        </div>
+        <div
+          onclick="window.location.href = 'shop.html'"
+          style="
+            cursor: pointer;
+            position: relative;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+          <div
+            style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.7),
+                transparent
+              );
+              display: flex;
+              align-items: flex-end;
+              padding: 20px;
+            "
+          >
+            <h3 style="color: white; font-size: 20px">Street Sneakers →</h3>
+          </div>
+        </div>
+        <div
+          onclick="window.location.href = 'shop.html'"
+          style="
+            cursor: pointer;
+            position: relative;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <img
+            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+          <div
+            style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.7),
+                transparent
+              );
+              display: flex;
+              align-items: flex-end;
+              padding: 20px;
+            "
+          >
+            <h3 style="color: white; font-size: 20px">Accessories →</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="section" style="padding: 40px 0 80px">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">TRENDING NOW</p>
+          <h2>Featured Arrivals</h2>
+        </div>
+        <a
+          href="shop.html"
+          style="
+            color: #111;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 14px;
+          "
+          >View All (10+) →</a
+        >
+      </div>
+
+      <div id="featuredGrid" class="product-grid">
+        <!-- Populated via script -->
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
+
+    <script src="js/store.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        Store.renderNavbar("home");
+
+        const featuredGrid = document.getElementById("featuredGrid");
+        if (featuredGrid) {
+          const products = Store.getProducts().slice(0, 4);
+          products.forEach((product) => {
+            featuredGrid.innerHTML += `
+                <div class="product-card" onclick="window.location.href='product.html?id=${product.id}'" style="cursor:pointer;">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">${product.category}</p>
+                        <h3>${product.name}</h3>
+                        <div class="product-bottom">
+                            <strong class="product-price">$${Number(product.price).toFixed(2)}</strong>
+                            <button class="add-cart" onclick="event.stopPropagation(); Store.addToCart(${product.id}, 1); alert('Added to cart!');">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+          });
+        }
+      });
+    </script>
+  </body>
 </html>

@@ -1,72 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>UrbanWear | Login</title>
-
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-    <!-- HEADER -->
-    <header>
-
-        <h2>UrbanWear</h2>
-
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="cart.html">Cart 🛒</a>
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
-        </nav>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | UrbanWear</title>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <b id="cartCount">0</b></a>
+        <a class="active" href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
     </header>
 
+    <main
+      style="
+        min-height: calc(100vh - 180px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      "
+    >
+      <div
+        class="auth-box"
+        style="
+          width: 100%;
+          max-width: 420px;
+          background: white;
+          padding: 40px;
+          border-radius: 12px;
+          box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+          margin: 0;
+        "
+      >
+        <div style="text-align: center; margin-bottom: 25px">
+          <p class="eyebrow" style="margin-bottom: 5px">WELCOME BACK</p>
+          <h1 style="font-size: 28px; font-weight: 700; color: #111">
+            Sign In
+          </h1>
+        </div>
 
-    <!-- LOGIN FORM -->
-    <div class="auth-box">
-
-        <h1>Login</h1>
+        <!-- Quick Fill Hint -->
+        <div
+          style="
+            background: #f0f4ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1e40af;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div><strong>Admin Demo:</strong> admin@gmail.com / admin123</div>
+          <button
+            type="button"
+            onclick="fillAdminCredentials()"
+            style="
+              background: #3b82f6;
+              color: white;
+              border: none;
+              padding: 4px 8px;
+              border-radius: 4px;
+              font-size: 11px;
+              cursor: pointer;
+              margin: 0;
+            "
+          >
+            Fill
+          </button>
+        </div>
 
         <form id="loginForm">
-
-            <input
-                type="email"
-                id="loginEmail"
-                placeholder="Enter your email"
-                required
+          <div style="margin-bottom: 15px">
+            <label
+              style="
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 6px;
+                color: #444;
+              "
+              >Email Address</label
             >
-
             <input
-                type="password"
-                id="loginPassword"
-                placeholder="Enter your password"
-                required
+              type="email"
+              id="loginEmail"
+              placeholder="e.g. name@example.com"
+              required
+              style="
+                width: 100%;
+                padding: 12px 14px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                font-size: 14px;
+              "
+            />
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <label
+              style="
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 6px;
+                color: #444;
+              "
+              >Password</label
             >
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="••••••••"
+              required
+              style="
+                width: 100%;
+                padding: 12px 14px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                font-size: 14px;
+              "
+            />
+          </div>
 
-            <button type="submit">
-                Login
-            </button>
-
+          <button
+            type="submit"
+            class="btn"
+            style="
+              width: 100%;
+              background: #111;
+              color: white;
+              padding: 13px;
+              border: none;
+              border-radius: 6px;
+              font-size: 15px;
+              font-weight: 600;
+              cursor: pointer;
+              margin: 0;
+            "
+          >
+            Sign In
+          </button>
         </form>
 
+        <div
+          style="
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+          "
+        >
+          Don't have an account?
+          <a
+            href="register.html"
+            style="color: #d4af37; font-weight: 600; text-decoration: none"
+            >Create Account</a
+          >
+        </div>
+      </div>
+    </main>
 
-        <p>
-            Don't have an account?
-            <a href="register.html">
-                Register
-            </a>
-        </p>
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
 
-    </div>
-
-
-    <!-- AUTH JAVASCRIPT -->
+    <script src="js/store.js"></script>
     <script src="js/auth.js"></script>
-
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        Store.renderNavbar("login");
+      });
+    </script>
+  </body>
 </html>

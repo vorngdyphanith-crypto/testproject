@@ -1,514 +1,163 @@
-// ========================================
-// URBANWEAR PRODUCTS
-// ========================================
+// ==========================================================================
+// URBANWEAR SHOP LOGIC (js/script.js)
+// ==========================================================================
 
-const products = [
+let activeCategory = "All";
 
-    {
-        id: 1,
-        name: "Urban Black T-Shirt",
-        category: "Men",
-        price: 15,
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ30rvbY4668GAlggsAvzAXcCGDFq0JZHcph2VMZDdFGQ&s=10"
-    },
+function getFilteredAndSortedProducts() {
+  let list = Store.getProducts();
 
-    {
-        id: 2,
-        name: "Oversized White T-Shirt",
-        category: "Men",
-        price: 18,
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaDg1S91G6Z25ebmJmPmMyYiMUTbsOLhYSqlNkLsA4Sg&s=10"
-    },
+  // Filter by Category
+  if (activeCategory !== "All") {
+    list = list.filter(
+      (p) =>
+        p.category && p.category.toLowerCase() === activeCategory.toLowerCase(),
+    );
+  }
 
-    {
-        id: 3,
-        name: "Women's Casual Shirt",
-        category: "Women",
-        price: 22,
-        image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
-    },
+  // Sort
+  const sortSelect = document.getElementById("sort");
+  const sortValue = sortSelect ? sortSelect.value : "default";
 
-    {
-        id: 4,
-        name: "Women's Fashion Jacket",
-        category: "Women",
-        price: 45,
-        image: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&w=600&q=80"
-    },
+  if (sortValue === "low") {
+    list.sort((a, b) => a.price - b.price);
+  } else if (sortValue === "high") {
+    list.sort((a, b) => b.price - a.price);
+  }
 
-    {
-        id: 5,
-        name: "Urban Sneakers",
-        category: "Shoes",
-        price: 55,
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        id: 6,
-        name: "Classic White Shoes",
-        category: "Shoes",
-        price: 60,
-        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        id: 7,
-        name: "Urban Cap",
-        category: "Accessories",
-        price: 12,
-        image: "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        id: 8,
-        name: "Black Backpack",
-        category: "Accessories",
-        price: 30,
-        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        id: 9,
-        name: "Denim Jacket",
-        category: "Men",
-        price: 40,
-        image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        id: 10,
-        name: "Women's Hoodie",
-        category: "Women",
-        price: 35,
-        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80"
-    }
-
-];
-
-
-// ========================================
-// GET CART
-// ========================================
-
-let cart = JSON.parse(
-    localStorage.getItem("cart") || "[]"
-);
-
-
-// ========================================
-// SHOW PRODUCTS
-// ========================================
+  return list;
+}
 
 function displayProducts(productList) {
+  const shopProducts = document.getElementById("shopProducts");
+  if (!shopProducts) return;
 
-    const shopProducts =
-        document.getElementById("shopProducts");
+  shopProducts.innerHTML = "";
 
-    if (!shopProducts) {
-        return;
-    }
-
-    shopProducts.innerHTML = "";
-
-
-    if (productList.length === 0) {
-
-        shopProducts.innerHTML = `
-            <div class="no-products">
-                <h2>No products found</h2>
-                <p>Try another category.</p>
+  if (!productList || productList.length === 0) {
+    shopProducts.innerHTML = `
+            <div class="no-products" style="grid-column: 1 / -1; text-align:center; padding: 50px 20px;">
+                <h2 style="font-size: 24px; margin-bottom: 10px;">No products found</h2>
+                <p style="color: #666;">Try selecting another category or check back later.</p>
             </div>
         `;
+    return;
+  }
 
-        return;
+  productList.forEach((product) => {
+    const isOutOfStock = product.stock <= 0;
+    const isLowStock = product.stock > 0 && product.stock <= 5;
+
+    let stockBadge = `<span class="badge badge-stock in-stock" style="display:inline-block; font-size:11px; padding:3px 8px; border-radius:12px; background:#e3f8ed; color:#16834d; margin-bottom:8px;">In Stock (${product.stock})</span>`;
+    if (isOutOfStock) {
+      stockBadge = `<span class="badge badge-stock out-of-stock" style="display:inline-block; font-size:11px; padding:3px 8px; border-radius:12px; background:#fee2e2; color:#dc2626; margin-bottom:8px;">Out of Stock</span>`;
+    } else if (isLowStock) {
+      stockBadge = `<span class="badge badge-stock low-stock" style="display:inline-block; font-size:11px; padding:3px 8px; border-radius:12px; background:#fff0d9; color:#c77b00; margin-bottom:8px;">Only ${product.stock} Left</span>`;
     }
 
+    const buttonHtml = isOutOfStock
+      ? `<button class="add-cart disabled" disabled style="background:#ccc; cursor:not-allowed;">Out of Stock</button>`
+      : `<button class="add-cart" onclick="handleAddToCart(event, ${product.id})">Add to Cart</button>`;
 
-    productList.forEach(product => {
-
-        shopProducts.innerHTML += `
-
-            <div class="product-card">
-
+    shopProducts.innerHTML += `
+            <div class="product-card" onclick="viewProduct(${product.id})" style="cursor: pointer;">
                 <div class="product-image">
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                    >
-
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80'">
                 </div>
-
 
                 <div class="product-info">
-
-                    <p class="product-category">
-                        ${product.category}
-                    </p>
-
-                    <h3>
-                        ${product.name}
-                    </h3>
-
-                    <div class="product-bottom">
-
-                        <strong>
-                            $${product.price.toFixed(2)}
-                        </strong>
-
-                        <button
-                            class="add-cart"
-                            onclick="addToCart(${product.id})">
-
-                            Add to Cart
-
-                        </button>
-
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <p class="product-category">${product.category || "General"}</p>
+                        ${stockBadge}
                     </div>
 
+                    <h3>${product.name}</h3>
+
+                    <div class="product-bottom">
+                        <div class="product-price">$${Number(product.price).toFixed(2)}</div>
+                        ${buttonHtml}
+                    </div>
                 </div>
-
             </div>
-
         `;
+  });
+}
 
+function viewProduct(id) {
+  localStorage.setItem("selectedProduct", id);
+  window.location.href = `product.html?id=${id}`;
+}
+
+function handleAddToCart(event, productId) {
+  if (event) {
+    event.stopPropagation(); // prevent triggering viewProduct
+  }
+  const result = Store.addToCart(productId, 1);
+  if (result.success) {
+    showToast(result.message);
+  } else {
+    alert(result.message);
+  }
+}
+
+function showToast(message) {
+  let toast = document.getElementById("toastNotification");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toastNotification";
+    toast.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #111;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            font-size: 14px;
+            z-index: 9999;
+            transition: all 0.3s ease;
+            border-left: 4px solid #d4af37;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+    document.body.appendChild(toast);
+  }
+
+  toast.innerHTML = `<span>✓</span> <span>${message}</span>`;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(20px)";
+  }, 2500);
+}
+
+// Setup Filters & Sort
+function setupShopControls() {
+  const filterButtons = document.querySelectorAll(".filter");
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      filterButtons.forEach((btn) => btn.classList.remove("active"));
+      this.classList.add("active");
+      activeCategory = this.dataset.cat;
+      displayProducts(getFilteredAndSortedProducts());
     });
+  });
 
+  const sortSelect = document.getElementById("sort");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", function () {
+      displayProducts(getFilteredAndSortedProducts());
+    });
+  }
 }
 
-
-// ========================================
-// ADD TO CART
-// ========================================
-
-function addToCart(productId) {
-
-    const product =
-        products.find(p => p.id === productId);
-
-
-    if (!product) {
-        return;
-    }
-
-
-    const existing =
-        cart.find(item => item.id === productId);
-
-
-    if (existing) {
-
-        existing.qty++;
-
-    } else {
-
-        cart.push({
-
-            id: product.id,
-
-            name: product.name,
-
-            category: product.category,
-
-            price: product.price,
-
-            image: product.image,
-
-            qty: 1
-
-        });
-
-    }
-
-
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
-
-
-    updateCartCount();
-
-
-    alert(
-        product.name +
-        " added to cart!"
-    );
-
-}
-
-
-// ========================================
-// CART COUNT
-// ========================================
-
-function updateCartCount() {
-
-    const cartCount =
-        document.getElementById("cartCount");
-
-
-    if (!cartCount) {
-        return;
-    }
-
-
-    const totalQty =
-        cart.reduce(
-            (total, item) =>
-                total + item.qty,
-            0
-        );
-
-
-    cartCount.textContent =
-        totalQty;
-
-}
-
-
-// ========================================
-// FILTER
-// ========================================
-
-const filterButtons =
-    document.querySelectorAll(".filter");
-
-
-filterButtons.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        function () {
-
-            filterButtons.forEach(btn => {
-
-                btn.classList.remove("active");
-
-            });
-
-
-            this.classList.add("active");
-
-
-            const category =
-                this.dataset.cat;
-
-
-            if (category === "All") {
-
-                displayProducts(products);
-
-            } else {
-
-                const filtered =
-                    products.filter(
-                        product =>
-                            product.category === category
-                    );
-
-                displayProducts(filtered);
-
-            }
-
-        }
-    );
-
+// Initial Run
+document.addEventListener("DOMContentLoaded", () => {
+  Store.renderNavbar("shop");
+  setupShopControls();
+  displayProducts(getFilteredAndSortedProducts());
 });
-
-
-// ========================================
-// SORT
-// ========================================
-
-const sortSelect =
-    document.getElementById("sort");
-
-
-if (sortSelect) {
-
-    sortSelect.addEventListener(
-        "change",
-        function () {
-
-            const activeButton =
-                document.querySelector(
-                    ".filter.active"
-                );
-
-
-            const category =
-                activeButton
-                    ? activeButton.dataset.cat
-                    : "All";
-
-
-            let result;
-
-
-            if (category === "All") {
-
-                result = [...products];
-
-            } else {
-
-                result =
-                    products.filter(
-                        product =>
-                            product.category === category
-                    );
-
-            }
-
-
-            if (this.value === "low") {
-
-                result.sort(
-                    (a, b) =>
-                        a.price - b.price
-                );
-
-            }
-
-
-            if (this.value === "high") {
-
-                result.sort(
-                    (a, b) =>
-                        b.price - a.price
-                );
-
-            }
-
-
-            displayProducts(result);
-
-        }
-    );
-
-}
-
-
-// ========================================
-// LOGIN / STAFF
-// ========================================
-
-function checkLogin() {
-
-    const currentUser =
-        JSON.parse(
-            localStorage.getItem(
-                "currentUser"
-            ) || "null"
-        );
-
-
-    const loginLink =
-        document.getElementById(
-            "loginLink"
-        );
-
-
-    const staffLink =
-        document.getElementById(
-            "staffLink"
-        );
-
-
-    const logoutLink =
-        document.getElementById(
-            "logoutLink"
-        );
-
-
-    if (currentUser) {
-
-        if (loginLink) {
-
-            loginLink.textContent =
-                currentUser.first_name ||
-                currentUser.email;
-
-            loginLink.href =
-                "#";
-
-        }
-
-
-        if (logoutLink) {
-
-            logoutLink.classList.remove(
-                "hidden"
-            );
-
-        }
-
-
-        if (
-            currentUser.role === "admin" ||
-            currentUser.role === "staff"
-        ) {
-
-            if (staffLink) {
-
-                staffLink.classList.remove(
-                    "hidden"
-                );
-
-            }
-
-        }
-
-    }
-
-}
-
-
-// ========================================
-// LOGOUT
-// ========================================
-
-const logoutLink =
-    document.getElementById(
-        "logoutLink"
-    );
-
-
-if (logoutLink) {
-
-    logoutLink.addEventListener(
-        "click",
-        function (event) {
-
-            event.preventDefault();
-
-
-            localStorage.removeItem(
-                "currentUser"
-            );
-
-
-            alert(
-                "Logout successful!"
-            );
-
-
-            window.location.href =
-                "login.html";
-
-        }
-    );
-
-}
-
-
-// ========================================
-// START
-// ========================================
-
-displayProducts(products);
-
-updateCartCount();
-
-checkLogin();

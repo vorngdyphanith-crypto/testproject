@@ -1,94 +1,240 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Staff Dashboard</title>
-
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-<header>
-
-    <h2>UrbanWear Staff</h2>
-
-    <nav>
-
-        <a href="index.html">
-            Website
-        </a>
-
-        <button onclick="logout()">
-            Logout
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Portal | UrbanWear</title>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .staff-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+      .admin-form {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+      .admin-form h2 {
+        font-size: 20px;
+        margin-bottom: 18px;
+        color: #111;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      .admin-form input,
+      .admin-form select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        margin: 0;
+      }
+      .admin-product {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .admin-product img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      .user-row {
+        background: white;
+        padding: 14px 18px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .banner-link {
+        background: #0f172a;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .banner-link a {
+        background: #d4af37;
+        color: #0f172a;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
+        <a href="index.html">Storefront</a>
+        <a href="shop.html">Shop</a>
+        <a href="dashboard.html" style="color: #d4af37; font-weight: 700"
+          >Admin Dashboard ↗</a
+        >
+        <button
+          onclick="logout()"
+          class="btn"
+          style="
+            background: #ef4444;
+            color: white;
+            padding: 7px 14px;
+            border-radius: 6px;
+            margin: 0;
+            border: none;
+            cursor: pointer;
+          "
+        >
+          Logout
         </button>
+      </nav>
+    </header>
 
-    </nav>
+    <div class="staff-container">
+      <div class="banner-link">
+        <div>
+          <strong>Looking for the full management experience?</strong>
+          <p style="color: #94a3b8; font-size: 13px; margin-top: 2px">
+            Analytics, recent sales revenue, and visual stock status are
+            available in the Dashboard.
+          </p>
+        </div>
+        <a href="dashboard.html">Open Admin Dashboard</a>
+      </div>
 
-</header>
+      <h1 style="font-size: 28px; margin-bottom: 25px">
+        Staff Operations Portal
+      </h1>
 
-
-<div class="container">
-
-    <h1>Staff Dashboard</h1>
-
-
-    <!-- ADD PRODUCT -->
-
-    <div class="admin-form">
-
-        <h2>Add Product</h2>
-
-        <input
+      <!-- ADD PRODUCT -->
+      <div class="admin-form">
+        <h2>Add Product to Catalog</h2>
+        <div class="form-row">
+          <input
             type="text"
             id="productName"
-            placeholder="Product Name"
-        >
-
-        <input
+            placeholder="Product Name *"
+            required
+          />
+          <select id="productCategory" required>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+          <input
             type="number"
             id="productPrice"
-            placeholder="Price"
-        >
-
-        <input
+            placeholder="Price ($) *"
+            step="0.01"
+            min="0"
+            required
+          />
+          <input
             type="number"
             id="productStock"
-            placeholder="Stock"
-        >
-
-        <input
-            type="text"
+            placeholder="Stock Quantity *"
+            min="0"
+            required
+          />
+        </div>
+        <div style="margin-bottom: 15px">
+          <input
+            type="url"
             id="productImage"
-            placeholder="Image URL"
+            placeholder="Image URL (e.g. https://images.unsplash.com/...)"
+            required
+          />
+        </div>
+        <button
+          onclick="addProduct()"
+          class="btn"
+          style="background: #111; color: white; border-radius: 6px; margin: 0"
         >
-
-        <button onclick="addProduct()">
-            Add Product
+          + Add Product
         </button>
+      </div>
 
+      <!-- ADD USER -->
+      <div class="admin-form">
+        <h2>Add New User / Staff</h2>
+        <div class="form-row">
+          <input
+            type="text"
+            id="userFirstName"
+            placeholder="First Name *"
+            required
+          />
+          <input
+            type="text"
+            id="userLastName"
+            placeholder="Last Name *"
+            required
+          />
+          <input
+            type="email"
+            id="userEmail"
+            placeholder="Email Address *"
+            required
+          />
+          <input
+            type="password"
+            id="userPassword"
+            placeholder="Password *"
+            required
+            minlength="4"
+          />
+          <select id="userRole">
+            <option value="user">User (Customer)</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button
+          onclick="addUser()"
+          class="btn"
+          style="background: #111; color: white; border-radius: 6px; margin: 0"
+        >
+          + Add User
+        </button>
+      </div>
+
+      <!-- PRODUCTS LIST -->
+      <h2 style="font-size: 22px; margin: 30px 0 15px">Current Products</h2>
+      <div id="adminProducts"></div>
+
+      <!-- USERS LIST -->
+      <h2 style="font-size: 22px; margin: 30px 0 15px">Registered Users</h2>
+      <div id="usersList"></div>
     </div>
 
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
 
-    <!-- PRODUCTS -->
-
-    <h2>Products</h2>
-
-    <div id="adminProducts"></div>
-
-
-    <!-- USERS -->
-
-    <h2>Registered Users</h2>
-
-    <div id="usersList"></div>
-
-</div>
-
-
-<script src="js/staff.js"></script>
-
-</body>
+    <script src="js/store.js"></script>
+    <script src="js/staff.js"></script>
+  </body>
 </html>

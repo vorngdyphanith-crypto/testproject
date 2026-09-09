@@ -1,225 +1,90 @@
-// =====================================
-// GET USERS
-// =====================================
+// ==========================================================================
+// URBANWEAR AUTHENTICATION LOGIC (js/auth.js)
+// ==========================================================================
 
-let users = JSON.parse(
-    localStorage.getItem("users") || "[]"
-);
-
-
-// =====================================
-// DEFAULT ADMIN
-// =====================================
-
-const adminExists = users.some(
-    user => user.email === "admin@gmail.com"
-);
-
-if (!adminExists) {
-
-    users.push({
-
-        first_name: "Admin",
-
-        last_name: "User",
-
-        gender: "Male",
-
-        email: "admin@gmail.com",
-
-        password: "admin123",
-
-        role: "admin"
-
-    });
-
-    localStorage.setItem(
-        "users",
-        JSON.stringify(users)
-    );
-}
-
-
-// =====================================
-// REGISTER
-// =====================================
-
-const registerForm =
-    document.getElementById("registerForm");
-
+// Register Form Handler
+const registerForm = document.getElementById("registerForm");
 if (registerForm) {
+  registerForm.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    registerForm.addEventListener(
-        "submit",
-        function(event) {
+    const firstName = document.getElementById("first_name").value.trim();
+    const lastName = document.getElementById("last_name").value.trim();
+    const gender = document.getElementById("gender").value;
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value;
 
-            event.preventDefault();
+    if (!firstName || !lastName || !email || !password) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
-            const first_name =
-                document.getElementById(
-                    "first_name"
-                ).value.trim();
+    const newUser = {
+      first_name: firstName,
+      last_name: lastName,
+      gender: gender || "Not Specified",
+      email: email,
+      password: password,
+      role: "user",
+    };
 
-            const last_name =
-                document.getElementById(
-                    "last_name"
-                ).value.trim();
+    const result = Store.addUser(newUser);
+    if (!result.success) {
+      alert(result.message);
+      return;
+    }
 
-            const gender =
-                document.getElementById(
-                    "gender"
-                ).value;
-
-            const email =
-                document.getElementById(
-                    "registerEmail"
-                ).value.trim();
-
-            const password =
-                document.getElementById(
-                    "registerPassword"
-                ).value;
-
-
-            // Check existing email
-
-            const exists = users.some(
-                user =>
-                    user.email.toLowerCase() ===
-                    email.toLowerCase()
-            );
-
-
-            if (exists) {
-
-                alert(
-                    "Email already registered!"
-                );
-
-                return;
-            }
-
-
-            // Create user
-
-            const newUser = {
-
-                first_name,
-
-                last_name,
-
-                gender,
-
-                email,
-
-                password,
-
-                role: "user"
-
-            };
-
-
-            users.push(newUser);
-
-
-            localStorage.setItem(
-                "users",
-                JSON.stringify(users)
-            );
-
-
-            alert(
-                "Registration successful!"
-            );
-
-
-            window.location.href =
-                "login.html";
-        }
+    // Auto login newly registered customer
+    Store.setCurrentUser(newUser);
+    alert(
+      "Welcome to UrbanWear, " +
+        firstName +
+        "! Your account was created successfully.",
     );
+    window.location.href = "shop.html";
+  });
 }
 
-
-// =====================================
-// LOGIN
-// =====================================
-
-const loginForm =
-    document.getElementById("loginForm");
-
+// Login Form Handler
+const loginForm = document.getElementById("loginForm");
 if (loginForm) {
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    loginForm.addEventListener(
-        "submit",
-        function(event) {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
 
-            event.preventDefault();
-
-            const email =
-                document.getElementById(
-                    "loginEmail"
-                ).value.trim();
-
-            const password =
-                document.getElementById(
-                    "loginPassword"
-                ).value;
-
-
-            const user = users.find(
-                user =>
-                    user.email.toLowerCase() ===
-                    email.toLowerCase() &&
-                    user.password === password
-            );
-
-
-            if (!user) {
-
-                alert(
-                    "Wrong email or password!"
-                );
-
-                return;
-            }
-
-
-            // Save logged-in user
-
-            localStorage.setItem(
-                "currentUser",
-                JSON.stringify(user)
-            );
-
-
-            // Admin -> Staff Dashboard
-
-            if (user.role === "admin") {
-
-                window.location.href =
-                    "staff.html";
-
-            } else {
-
-                window.location.href =
-                    "index.html";
-            }
-
-        }
+    const users = Store.getUsers();
+    const user = users.find(
+      (u) =>
+        u.email &&
+        u.email.toLowerCase() === email.toLowerCase() &&
+        u.password === password,
     );
+
+    if (!user) {
+      alert("Invalid email or password. Please try again.");
+      return;
+    }
+
+    Store.setCurrentUser(user);
+
+    if (user.role && user.role.toLowerCase() === "admin") {
+      alert("Welcome back, Admin!");
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Welcome back, " + (user.first_name || "Shopper") + "!");
+      window.location.href = "shop.html";
+    }
+  });
 }
 
-
-// =====================================
-// LOGOUT
-// =====================================
-
-function logout() {
-
-    localStorage.removeItem(
-        "currentUser"
-    );
-
-    window.location.href =
-        "login.html";
+// Quick fill helper for testing
+function fillAdminCredentials() {
+  const emailInput = document.getElementById("loginEmail");
+  const passInput = document.getElementById("loginPassword");
+  if (emailInput && passInput) {
+    emailInput.value = "admin@gmail.com";
+    passInput.value = "admin123";
+  }
 }

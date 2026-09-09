@@ -1,102 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<header>
-    <h2>UrbanWear</h2>
-
-    <nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details | UrbanWear</title>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
         <a href="index.html">Home</a>
         <a href="shop.html">Shop</a>
-        <a href="cart.html">Cart 🛒</a>
-    </nav>
-</header>
+        <a href="cart.html">Cart <b id="cartCount">0</b></a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
+    </header>
 
-<div class="container">
-    <div id="productDetail"></div>
-</div>
+    <main class="section shop-page">
+      <div id="productDetail">
+        <!-- Loaded dynamically from js/product.js -->
+      </div>
+    </main>
 
-<script>
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
 
-const id = Number(
-    localStorage.getItem("selectedProduct")
-);
-
-const products = JSON.parse(
-    localStorage.getItem("products") || "[]"
-);
-
-const product = products.find(
-    p => p.id === id
-);
-
-const detail =
-    document.getElementById("productDetail");
-
-if (product) {
-
-    detail.innerHTML = `
-        <div class="detail">
-
-            <img src="${product.image}">
-
-            <div>
-                <h1>${product.name}</h1>
-
-                <h2>$${product.price}</h2>
-
-                <p>Stock: ${product.stock}</p>
-
-                <button onclick="addProduct()">
-                    Add To Cart
-                </button>
-            </div>
-
-        </div>
-    `;
-
-} else {
-
-    detail.innerHTML =
-        "<h2>Product not found</h2>";
-}
-
-function addProduct() {
-
-    let cart = JSON.parse(
-        localStorage.getItem("cart") || "[]"
-    );
-
-    const existing =
-        cart.find(item => item.id === product.id);
-
-    if (existing) {
-        existing.qty++;
-    } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            qty: 1
-        });
-    }
-
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
-
-    alert("Added to cart!");
-}
-
-</script>
-
-</body>
+    <script src="js/store.js"></script>
+    <script src="js/product.js"></script>
+  </body>
 </html>

@@ -1,63 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>UrbanWear | Cart</title>
-
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-    <!-- HEADER -->
-    <header>
-
-        <h2>UrbanWear</h2>
-
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="cart.html">Cart 🛒</a>
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
-        </nav>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart | UrbanWear</title>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a class="active" href="cart.html">Cart <b id="cartCount">0</b></a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
     </header>
 
+    <main class="section shop-page">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">YOUR BAG</p>
+          <h1>Shopping Cart</h1>
+        </div>
+      </div>
 
-    <!-- CART -->
-    <main class="container">
-
-        <h1>Shopping Cart</h1>
-
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 40px;
+          align-items: start;
+        "
+      >
+        <!-- CART ITEMS -->
         <div id="cartList">
-            <!-- Products will appear here -->
+          <!-- Populated dynamically -->
         </div>
 
+        <!-- ORDER SUMMARY -->
+        <div
+          id="cartSummary"
+          style="
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 20px;
+          "
+        >
+          <h2
+            style="
+              font-size: 20px;
+              font-weight: 700;
+              margin-bottom: 20px;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 12px;
+            "
+          >
+            Order Summary
+          </h2>
 
-        <!-- TOTAL -->
-        <div class="cart-summary">
-
-            <h2 id="total">
-                Total: $0.00
-            </h2>
-
-            <button
-                onclick="checkout()"
-                class="btn"
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 12px;
+              font-size: 15px;
+              color: #555;
+            "
+          >
+            <span>Subtotal</span>
+            <span id="subtotal" style="font-weight: 600; color: #111"
+              >$0.00</span
             >
-                Checkout
-            </button>
+          </div>
 
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 15px;
+              font-size: 15px;
+              color: #555;
+            "
+          >
+            <span>Shipping</span>
+            <span id="shipping" style="font-weight: 600; color: #16834d"
+              >FREE</span
+            >
+          </div>
+
+          <p style="font-size: 12px; color: #888; margin-bottom: 20px">
+            * Free shipping applied on all orders over $50.00
+          </p>
+
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 25px;
+              border-top: 1px solid #eee;
+              padding-top: 15px;
+              font-size: 20px;
+              font-weight: 700;
+              color: #111;
+            "
+          >
+            <span>Total</span>
+            <span id="total">$0.00</span>
+          </div>
+
+          <button
+            onclick="handleCheckout()"
+            class="btn"
+            style="
+              width: 100%;
+              background: #111;
+              color: white;
+              padding: 15px;
+              border: none;
+              border-radius: 8px;
+              font-size: 16px;
+              font-weight: 600;
+              cursor: pointer;
+              transition: 0.3s;
+            "
+          >
+            Proceed to Checkout
+          </button>
+
+          <div style="margin-top: 20px; text-align: center">
+            <a
+              href="shop.html"
+              style="color: #666; font-size: 14px; text-decoration: none"
+            >
+              ← Continue Shopping
+            </a>
+          </div>
         </div>
-
+      </div>
     </main>
 
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
 
-    <!-- JAVASCRIPT -->
+    <script src="js/store.js"></script>
     <script src="js/cart.js"></script>
-
-</body>
+  </body>
 </html>

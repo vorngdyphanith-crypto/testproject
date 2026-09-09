@@ -1,135 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanWear | Shop</title>
-
-    <link rel="stylesheet" href="css/shop.css">
-</head>
-
-<body>
-
-<header class="header">
-
-    <a class="logo" href="index.html">
-        Urban<span>Wear</span>
-    </a>
-
-    <nav>
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"> Urban<span>Wear</span> </a>
+      <nav>
         <a href="index.html">Home</a>
+        <a class="active" href="shop.html">Shop</a>
+        <a href="cart.html">Cart <b id="cartCount">0</b></a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
+    </header>
 
-        <a class="active" href="shop.html">
-            Shop
-        </a>
-
-        <a href="cart.html">
-            Cart <b id="cartCount">0</b>
-        </a>
-
-        <a id="loginLink" href="login.html">
-            Login
-        </a>
-
-        <a id="staffLink" class="hidden" href="staff.html">
-            Staff
-        </a>
-
-        <a id="logoutLink" class="hidden" href="#">
-            Logout
-        </a>
-    </nav>
-
-</header>
-
-
-<main class="section shop-page">
-
-    <div class="section-head">
-
+    <main class="section shop-page">
+      <div class="section-head">
         <div>
-            <p class="eyebrow">
-                OUR STORE
-            </p>
-
-            <h1>
-                Shop all
-            </h1>
+          <p class="eyebrow">OUR STORE</p>
+          <h1>Shop All</h1>
         </div>
+      </div>
 
-    </div>
+      <!-- FILTER & SORT -->
+      <div class="filters">
+        <button class="filter active" data-cat="All">All</button>
+        <button class="filter" data-cat="Men">Men</button>
+        <button class="filter" data-cat="Women">Women</button>
+        <button class="filter" data-cat="Shoes">Shoes</button>
+        <button class="filter" data-cat="Accessories">Accessories</button>
 
-
-    <!-- FILTER -->
-    <div class="filters">
-
-        <button
-            class="filter active"
-            data-cat="All">
-            All
-        </button>
-
-        <button
-            class="filter"
-            data-cat="Men">
-            Men
-        </button>
-
-        <button
-            class="filter"
-            data-cat="Women">
-            Women
-        </button>
-
-        <button
-            class="filter"
-            data-cat="Shoes">
-            Shoes
-        </button>
-
-        <button
-            class="filter"
-            data-cat="Accessories">
-            Accessories
-        </button>
-
-
-        <!-- SORT -->
         <select id="sort">
-
-            <option value="default">
-                Sort by
-            </option>
-
-            <option value="low">
-                Price: Low to High
-            </option>
-
-            <option value="high">
-                Price: High to Low
-            </option>
-
+          <option value="default">Sort by: Featured</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
         </select>
+      </div>
 
-    </div>
+      <!-- PRODUCTS GRID -->
+      <div id="shopProducts" class="product-grid">
+        <!-- Loaded dynamically from Store -->
+      </div>
+    </main>
 
+    <footer>
+      <p>© 2026 UrbanWear Inc. All rights reserved.</p>
+    </footer>
 
-    <!-- PRODUCTS -->
-    <div
-        id="shopProducts"
-        class="product-grid">
-    </div>
-
-</main>
-
-
-<footer>
-    © 2026 UrbanWear. All rights reserved.
-</footer>
-
-
-<script src="js/script.js"></script>
-
-</body>
+    <script src="js/store.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>
