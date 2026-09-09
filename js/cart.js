@@ -2,6 +2,8 @@
 // URBANWEAR CART & CHECKOUT LOGIC (js/cart.js)
 // ==========================================================================
 
+let currentCartTotal = 0;
+
 function displayCart() {
   const cartList = document.getElementById("cartList");
   const summaryContainer = document.getElementById("cartSummary");
@@ -82,6 +84,7 @@ function displayCart() {
 
   const shipping = subtotal > 50 ? 0 : 5.0;
   const total = subtotal + shipping;
+  currentCartTotal = total;
 
   if (subtotalElement) {
     subtotalElement.innerText = "$" + subtotal.toFixed(2);
@@ -125,31 +128,71 @@ function deleteItem(id) {
   displayCart();
 }
 
-function handleCheckout() {
+function handleClearCart() {
   const cart = Store.getCart();
   if (cart.length === 0) {
-    alert("Your cart is empty!");
+    alert("Cart is already empty.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove all items from your cart?")) {
+    Store.clearCart();
+    displayCart();
+  }
+}
+
+// Interactive Checkout Modal Handlers
+function openCheckoutModal() {
+  const cart = Store.getCart();
+  if (cart.length === 0) {
+    alert("Your cart is empty! Please add products from the shop.");
     return;
   }
 
   const currentUser = Store.getCurrentUser();
-  let customerName = "";
-  let customerEmail = "";
+  const nameInput = document.getElementById("orderName");
+  const emailInput = document.getElementById("orderEmail");
+  const modalTotal = document.getElementById("checkoutModalTotal");
 
   if (currentUser) {
-    customerName = `${currentUser.first_name} ${currentUser.last_name}`;
-    customerEmail = currentUser.email;
+    if (nameInput) {
+      nameInput.value = `${currentUser.first_name || ""} ${currentUser.last_name || ""}`.trim() || currentUser.email.split("@")[0];
+    }
+    if (emailInput) {
+      emailInput.value = currentUser.email || "";
+    }
   } else {
-    customerName = prompt(
-      "Enter your full name for order delivery:",
-      "Valued Shopper",
-    );
-    if (!customerName) return; // user cancelled
-    customerEmail = prompt("Enter your email address:", "customer@example.com");
-    if (!customerEmail) return;
+    if (nameInput && !nameInput.value) nameInput.value = "";
+    if (emailInput && !emailInput.value) emailInput.value = "";
   }
 
-  const result = Store.checkout({ name: customerName, email: customerEmail });
+  if (modalTotal) {
+    modalTotal.textContent = "$" + currentCartTotal.toFixed(2);
+  }
+
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.add("active");
+}
+
+function closeCheckoutModal() {
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.remove("active");
+}
+
+function handleCheckoutSubmit(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("orderName").value.trim();
+  const email = document.getElementById("orderEmail").value.trim();
+  const address = document.getElementById("orderAddress").value.trim();
+
+  if (!name || !email) {
+    alert("Please provide both your name and email address.");
+    return;
+  }
+
+  const result = Store.checkout({ name, email, address });
+
+  closeCheckoutModal();
 
   if (!result.success) {
     alert(result.message);
@@ -157,57 +200,57 @@ function handleCheckout() {
     return;
   }
 
-  // Display confirmation screen with Awaiting Admin Confirmation status
+  // Render receipt screen
   const mainContainer = document.querySelector("main.container, main.section");
   if (mainContainer) {
     mainContainer.innerHTML = `
-            <div style="max-width:680px; margin:40px auto; background:white; padding:45px; border-radius:12px; box-shadow:0 4px 25px rgba(0,0,0,0.08); text-align:center;">
-                <div style="width:72px; height:72px; background:#fef3c7; color:#d97706; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:36px; margin:0 auto 20px; border:2px solid #f59e0b;">
-                    ⏳
-                </div>
-                <h1 style="font-size:28px; margin-bottom:10px; color:#111;">Order Placed!</h1>
-                <p style="color:#666; font-size:15px; margin-bottom:20px;">
-                    Thank you, <strong>${result.order.customer}</strong>! Your order has been submitted and is currently <strong>awaiting administrator confirmation</strong>.
-                </p>
+      <div style="max-width:680px; margin:40px auto; background:white; padding:45px; border-radius:14px; box-shadow:0 4px 25px rgba(0,0,0,0.08); text-align:center;">
+        <div style="width:72px; height:72px; background:#fef3c7; color:#d97706; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:36px; margin:0 auto 20px; border:2px solid #f59e0b;">
+          ⏳
+        </div>
+        <h1 style="font-size:28px; margin-bottom:10px; color:#111;">Order Placed Successfully!</h1>
+        <p style="color:#666; font-size:15px; margin-bottom:20px;">
+          Thank you, <strong>${result.order.customer}</strong>! Your order has been submitted and is currently <strong>awaiting administrator confirmation</strong>.
+        </p>
 
-                <!-- Status Banner -->
-                <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px 18px; margin-bottom:25px; display:flex; align-items:center; justify-content:space-between; font-size:14px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:18px;">🟡</span>
-                        <span style="color:#92400e; font-weight:600;">Status: Pending Admin Confirmation</span>
-                    </div>
-                    <span style="font-size:12px; color:#b45309;">Review in progress</span>
-                </div>
+        <!-- Status Banner -->
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px 18px; margin-bottom:25px; display:flex; align-items:center; justify-content:space-between; font-size:14px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:18px;">🟡</span>
+            <span style="color:#92400e; font-weight:600;">Status: Pending Admin Confirmation</span>
+          </div>
+          <span style="font-size:12px; color:#b45309;">Review in progress</span>
+        </div>
 
-                <div style="background:#f8f9fa; border:1px dashed #ccc; border-radius:8px; padding:20px; text-align:left; margin-bottom:25px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-                        <span style="color:#777;">Order Number:</span>
-                        <strong>${result.order.id}</strong>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-                        <span style="color:#777;">Date & Time:</span>
-                        <span>${result.order.date} ${result.order.time || ""}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-                        <span style="color:#777;">Total Amount:</span>
-                        <strong style="color:#111; font-size:16px;">$${result.order.total.toFixed(2)}</strong>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; font-size:14px;">
-                        <span style="color:#777;">Email:</span>
-                        <span>${result.order.email}</span>
-                    </div>
-                </div>
+        <div style="background:#f8f9fa; border:1px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:left; margin-bottom:25px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#777;">Order ID:</span>
+            <strong>${result.order.id}</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#777;">Date & Time:</span>
+            <span>${result.order.date} ${result.order.time || ""}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#777;">Total Amount:</span>
+            <strong style="color:#111; font-size:16px;">$${result.order.total.toFixed(2)}</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:14px;">
+            <span style="color:#777;">Confirmation Email:</span>
+            <span>${result.order.email}</span>
+          </div>
+        </div>
 
-                <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                    <a href="orders.html" class="btn" style="background:#d4af37; color:#0f172a; padding:12px 26px; border-radius:6px; text-decoration:none; font-weight:700;">
-                        Track Order / My Orders →
-                    </a>
-                    <a href="shop.html" class="btn" style="background:#111; color:white; padding:12px 24px; border-radius:6px; text-decoration:none; font-weight:600;">
-                        Continue Shopping
-                    </a>
-                </div>
-            </div>
-        `;
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+          <a href="orders.html" class="btn" style="background:#d4af37; color:#0f172a; padding:12px 26px; border-radius:6px; text-decoration:none; font-weight:700;">
+            Track Order / My Orders →
+          </a>
+          <a href="shop.html" class="btn" style="background:#111; color:white; padding:12px 24px; border-radius:6px; text-decoration:none; font-weight:600;">
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    `;
   }
 }
 

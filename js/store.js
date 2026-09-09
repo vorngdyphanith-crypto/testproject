@@ -153,31 +153,41 @@ const INITIAL_ORDERS = [
   },
 ];
 
-// --- INITIALIZATION ---
+// Helper to identify stale mini-market items (e.g. Lemon Soda, Pepsi, Soap)
+function isStaleForeignItem(name) {
+  if (!name || typeof name !== "string") return true;
+  const lower = name.toLowerCase();
+  return (
+    lower.includes("lemon") ||
+    lower.includes("soda") ||
+    lower.includes("pepsi") ||
+    lower.includes("soap")
+  );
+}
+
+// --- INITIALIZATION & AUTO-CLEANSING ---
 (function initStore() {
-  // Initialize Products
+  // 1. Cleanse & Initialize Products
   const existingProducts = localStorage.getItem("products");
-  if (!existingProducts || JSON.parse(existingProducts).length === 0) {
+  if (!existingProducts) {
     localStorage.setItem("products", JSON.stringify(INITIAL_PRODUCTS));
   } else {
     try {
-      const parsed = JSON.parse(existingProducts);
-      let updated = false;
-      parsed.forEach((p) => {
-        if (!p.category) {
-          p.category = "Men";
-          updated = true;
+      let parsed = JSON.parse(existingProducts);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        localStorage.setItem("products", JSON.stringify(INITIAL_PRODUCTS));
+      } else {
+        // Filter out stale non-clothing items like Lemon Soda
+        parsed = parsed.filter((p) => p && p.name && !isStaleForeignItem(p.name));
+        if (parsed.length === 0) {
+          parsed = INITIAL_PRODUCTS;
+        } else {
+          parsed.forEach((p) => {
+            if (!p.category) p.category = "Men";
+            if (typeof p.stock === "undefined") p.stock = 15;
+            if (!p.description) p.description = `${p.name} - UrbanWear collection.`;
+          });
         }
-        if (typeof p.stock === "undefined") {
-          p.stock = 15;
-          updated = true;
-        }
-        if (!p.description) {
-          p.description = `${p.name} - Premium quality UrbanWear item.`;
-          updated = true;
-        }
-      });
-      if (updated) {
         localStorage.setItem("products", JSON.stringify(parsed));
       }
     } catch (e) {
@@ -185,7 +195,45 @@ const INITIAL_ORDERS = [
     }
   }
 
-  // Initialize Users
+  // 2. Cleanse Cart (Remove any stale Lemon Soda or invalid items)
+  const existingCart = localStorage.getItem("cart");
+  if (existingCart) {
+    try {
+      let cart = JSON.parse(existingCart);
+      if (Array.isArray(cart)) {
+        const cleanCart = cart.filter(
+          (item) => item && item.name && !isStaleForeignItem(item.name)
+        );
+        localStorage.setItem("cart", JSON.stringify(cleanCart));
+      }
+    } catch (e) {
+      localStorage.removeItem("cart");
+    }
+  }
+
+  // 3. Cleanse Orders (Remove any old orders containing Lemon Soda)
+  const existingOrders = localStorage.getItem("orders");
+  if (!existingOrders) {
+    localStorage.setItem("orders", JSON.stringify(INITIAL_ORDERS));
+  } else {
+    try {
+      let orders = JSON.parse(existingOrders);
+      if (Array.isArray(orders)) {
+        const cleanOrders = orders.filter((order) => {
+          if (!order || !Array.isArray(order.items)) return false;
+          return !order.items.some((i) => i && isStaleForeignItem(i.name));
+        });
+        localStorage.setItem(
+          "orders",
+          JSON.stringify(cleanOrders.length > 0 ? cleanOrders : INITIAL_ORDERS)
+        );
+      }
+    } catch (e) {
+      localStorage.setItem("orders", JSON.stringify(INITIAL_ORDERS));
+    }
+  }
+
+  // 4. Initialize Users
   const existingUsers = localStorage.getItem("users");
   if (!existingUsers) {
     localStorage.setItem("users", JSON.stringify(INITIAL_USERS));
@@ -193,7 +241,7 @@ const INITIAL_ORDERS = [
     try {
       const users = JSON.parse(existingUsers);
       const hasAdmin = users.some(
-        (u) => u.email && u.email.toLowerCase() === "admin@gmail.com",
+        (u) => u.email && u.email.toLowerCase() === "admin@gmail.com"
       );
       if (!hasAdmin) {
         users.push(INITIAL_USERS[0]);
@@ -202,12 +250,6 @@ const INITIAL_ORDERS = [
     } catch (e) {
       localStorage.setItem("users", JSON.stringify(INITIAL_USERS));
     }
-  }
-
-  // Initialize Orders
-  const existingOrders = localStorage.getItem("orders");
-  if (!existingOrders) {
-    localStorage.setItem("orders", JSON.stringify(INITIAL_ORDERS));
   }
 })();
 
@@ -218,9 +260,10 @@ window.Store = {
   // --- PRODUCTS ---
   getProducts() {
     try {
-      return JSON.parse(localStorage.getItem("products")) || [];
+      const list = JSON.parse(localStorage.getItem("products")) || [];
+      return list.filter((p) => p && !isStaleForeignItem(p.name));
     } catch (e) {
-      return [];
+      return INITIAL_PRODUCTS;
     }
   },
 
@@ -265,7 +308,17 @@ window.Store = {
   // --- CART ---
   getCart() {
     try {
-      return JSON.parse(localStorage.getItem("cart")) || [];
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const products = this.getProducts();
+      // Keep only valid clothing products that exist in current catalog
+      const cleanCart = cart.filter((item) => {
+        if (!item || isStaleForeignItem(item.name)) return false;
+        return products.some((p) => p.id === item.id);
+      });
+      if (cleanCart.length !== cart.length) {
+        localStorage.setItem("cart", JSON.stringify(cleanCart));
+      }
+      return cleanCart;
     } catch (e) {
       return [];
     }
@@ -352,7 +405,11 @@ window.Store = {
   // --- CHECKOUT & ORDERS ---
   getOrders() {
     try {
-      return JSON.parse(localStorage.getItem("orders")) || [];
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      return orders.filter((ord) => {
+        if (!ord || !Array.isArray(ord.items)) return false;
+        return !ord.items.some((i) => i && isStaleForeignItem(i.name));
+      });
     } catch (e) {
       return [];
     }
@@ -365,7 +422,7 @@ window.Store = {
   getOrderById(id) {
     return (
       this.getOrders().find(
-        (o) => String(o.id).toUpperCase() === String(id).toUpperCase(),
+        (o) => String(o.id).toUpperCase() === String(id).toUpperCase()
       ) || null
     );
   },
@@ -373,31 +430,51 @@ window.Store = {
   getOrdersByCustomer(email) {
     if (!email) return [];
     return this.getOrders().filter(
-      (o) => o.email && o.email.toLowerCase() === email.toLowerCase(),
+      (o) => o.email && o.email.toLowerCase() === email.toLowerCase()
     );
   },
 
   checkout(customerInfo = {}) {
     const cart = this.getCart();
     if (cart.length === 0) {
-      return { success: false, message: "Your cart is empty!" };
+      return { success: false, message: "Your cart is empty! Please add items to checkout." };
     }
 
     const products = this.getProducts();
 
-    // 1. Verify stock for all items
+    // 1. Verify and filter valid items
+    const validItems = [];
     for (const item of cart) {
       const prod = products.find((p) => p.id === item.id);
-      if (!prod || prod.stock < item.qty) {
+      if (!prod) {
+        continue; // Skip any orphaned or non-existent items
+      }
+      if (prod.stock < item.qty) {
         return {
           success: false,
-          message: `Not enough stock for "${item.name}". Available: ${prod ? prod.stock : 0}`,
+          message: `Not enough stock for "${item.name}". Only ${prod.stock} available.`,
         };
       }
+      validItems.push({
+        id: prod.id,
+        name: prod.name,
+        price: prod.price,
+        image: prod.image,
+        category: prod.category,
+        qty: item.qty,
+      });
     }
 
-    // 2. Deduct stock
-    for (const item of cart) {
+    if (validItems.length === 0) {
+      this.clearCart();
+      return {
+        success: false,
+        message: "The items in your cart are no longer available. Cart has been refreshed.",
+      };
+    }
+
+    // 2. Deduct stock for verified items
+    for (const item of validItems) {
       const prod = products.find((p) => p.id === item.id);
       if (prod) {
         prod.stock -= item.qty;
@@ -406,7 +483,7 @@ window.Store = {
     this.saveProducts(products);
 
     // 3. Compute total
-    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = validItems.reduce((sum, item) => sum + item.price * item.qty, 0);
 
     // 4. Create Order Record in PENDING status
     const currentUser = this.getCurrentUser();
@@ -420,14 +497,13 @@ window.Store = {
       customer:
         customerInfo.name ||
         (currentUser
-          ? `${currentUser.first_name} ${currentUser.last_name}`
-          : "Guest Shopper"),
-      email:
-        customerInfo.email ||
-        (currentUser ? currentUser.email : "guest@urbanwear.com"),
+          ? `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || currentUser.email
+          : "Guest Customer"),
+      email: customerInfo.email || (currentUser ? currentUser.email : "guest@urbanwear.com"),
+      address: customerInfo.address || "Standard Delivery",
       total: Number(total.toFixed(2)),
-      status: "Pending", // Starts as Pending awaiting Admin Confirmation
-      items: [...cart],
+      status: "Pending", // Awaiting Admin Confirmation
+      items: [...validItems],
     };
 
     const orders = this.getOrders();
@@ -440,47 +516,26 @@ window.Store = {
     return {
       success: true,
       order: order,
-      message: "Order placed successfully! Waiting for admin confirmation.",
+      message: "Order placed successfully! Waiting for administrator confirmation.",
     };
   },
 
   updateOrderStatus(orderId, newStatus) {
     const orders = this.getOrders();
     const order = orders.find(
-      (o) => String(o.id).toUpperCase() === String(orderId).toUpperCase(),
+      (o) => String(o.id).toUpperCase() === String(orderId).toUpperCase()
     );
     if (!order) return { success: false, message: "Order not found" };
 
     const oldStatus = order.status;
 
-    // If cancelling an order, return the stock to products
+    // Restock on cancellation
     if (oldStatus !== "Cancelled" && newStatus === "Cancelled") {
       const products = this.getProducts();
       (order.items || []).forEach((item) => {
         const prod = products.find((p) => p.id === item.id);
         if (prod) {
           prod.stock += item.qty;
-        }
-      });
-      this.saveProducts(products);
-    }
-
-    // If re-activating a cancelled order, deduct stock if available
-    if (oldStatus === "Cancelled" && newStatus !== "Cancelled") {
-      const products = this.getProducts();
-      for (const item of order.items || []) {
-        const prod = products.find((p) => p.id === item.id);
-        if (!prod || prod.stock < item.qty) {
-          return {
-            success: false,
-            message: `Cannot reactivate order: Insufficient stock for ${item.name}.`,
-          };
-        }
-      }
-      (order.items || []).forEach((item) => {
-        const prod = products.find((p) => p.id === item.id);
-        if (prod) {
-          prod.stock -= item.qty;
         }
       });
       this.saveProducts(products);
@@ -495,8 +550,17 @@ window.Store = {
     return {
       success: true,
       order,
-      message: `Order ${orderId} marked as ${newStatus}.`,
+      message: `Order ${orderId} status updated to ${newStatus}.`,
     };
+  },
+
+  // --- RESET UTILITY ---
+  resetToCleanState() {
+    localStorage.setItem("products", JSON.stringify(INITIAL_PRODUCTS));
+    localStorage.setItem("orders", JSON.stringify(INITIAL_ORDERS));
+    localStorage.setItem("users", JSON.stringify(INITIAL_USERS));
+    localStorage.removeItem("cart");
+    this.updateNavBadges();
   },
 
   // --- USERS & AUTH ---
@@ -533,7 +597,7 @@ window.Store = {
     const users = this.getUsers();
     if (
       users.some(
-        (u) => u.email && u.email.toLowerCase() === user.email.toLowerCase(),
+        (u) => u.email && u.email.toLowerCase() === user.email.toLowerCase()
       )
     ) {
       return { success: false, message: "Email already registered!" };
@@ -546,7 +610,7 @@ window.Store = {
   deleteUser(email) {
     let users = this.getUsers();
     const target = users.find(
-      (u) => u.email && u.email.toLowerCase() === email.toLowerCase(),
+      (u) => u.email && u.email.toLowerCase() === email.toLowerCase()
     );
     if (!target) return { success: false, message: "User not found" };
     if (target.email.toLowerCase() === "admin@gmail.com") {
@@ -563,7 +627,7 @@ window.Store = {
   // --- SHARED NAVBAR UTILITY ---
   updateNavBadges() {
     const cartCounts = document.querySelectorAll(
-      "#cartCount, .cart-count-badge",
+      "#cartCount, .cart-count-badge"
     );
     const count = this.getCartCount();
     cartCounts.forEach((el) => {
