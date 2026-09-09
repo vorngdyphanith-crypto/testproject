@@ -25,8 +25,74 @@ function getFilteredAndSortedProducts() {
     list.sort((a, b) => b.price - a.price);
   }
 
+<<<<<<< HEAD
   return list;
 }
+=======
+    {
+        id: 5,
+        name: "Urban Sneakers",
+        category: "Shoes",
+        price: 55,
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+    },
+
+    {
+        id: 6,
+        name: "Classic White Shoes",
+        category: "Shoes",
+        price: 60,
+        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80"
+    },
+
+    {
+        id: 7,
+        name: "Urban Cap",
+        category: "Accessories",
+        price: 12,
+        image: "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=600&q=80"
+    },
+
+    {
+        id: 8,
+        name: "Black Backpack",
+        category: "Accessories",
+        price: 30,
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80"
+    },
+
+    {
+        id: 9,
+        name: "Denim Jacket",
+        category: "Men",
+        price: 40,
+        image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80"
+    },
+
+    {
+        id: 10,
+        name: "Women's Hoodie",
+        category: "Women",
+        price: 35,
+        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80"
+    }
+    
+];
+
+
+// ========================================
+// GET CART
+// ========================================
+
+let cart = JSON.parse(
+    localStorage.getItem("cart") || "[]"
+);
+
+
+// ========================================
+// SHOW PRODUCTS
+// ========================================
+>>>>>>> 7e305d98012a5f91b791373362af846ed550bbca
 
 function displayProducts(productList) {
   const shopProducts = document.getElementById("shopProducts");
