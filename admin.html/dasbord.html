@@ -1,914 +1,1103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanWear | Admin Management Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
 
-        body {
-            display: flex;
-            background: #f1f5f9;
-            color: #1e293b;
-            min-height: 100vh;
-        }
+      body {
+        display: flex;
+        background: #f1f5f9;
+        color: #1e293b;
+        min-height: 100vh;
+      }
 
-        /* SIDEBAR */
+      /* SIDEBAR */
+      .sidebar {
+        width: 260px;
+        background: #0f172a;
+        color: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        padding: 24px 18px;
+        z-index: 100;
+      }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .sidebar-logo .icon {
+        font-size: 26px;
+        background: #1e293b;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sidebar-logo h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+
+      .sidebar-logo h2 span {
+        color: #d4af37;
+      }
+
+      .sidebar-logo p {
+        font-size: 11px;
+        color: #94a3b8;
+        letter-spacing: 0.5px;
+      }
+
+      .menu {
+        list-style: none;
+        margin-top: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex-grow: 1;
+      }
+
+      .menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #94a3b8;
+        text-decoration: none;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .menu a:hover {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      .menu a.active {
+        background: #d4af37;
+        color: #0f172a;
+        font-weight: 700;
+      }
+
+      .sidebar-footer {
+        border-top: 1px solid #1e293b;
+        padding-top: 18px;
+      }
+
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding: 8px 10px;
+        background: #1e293b;
+        border-radius: 8px;
+      }
+
+      .user-pill .avatar {
+        width: 32px;
+        height: 32px;
+        background: #d4af37;
+        color: #0f172a;
+        font-weight: bold;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .user-pill .info {
+        font-size: 12px;
+        line-height: 1.3;
+        overflow: hidden;
+      }
+
+      .user-pill .name {
+        font-weight: 600;
+        color: #f8fafc;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .user-pill .role {
+        color: #94a3b8;
+        font-size: 11px;
+      }
+
+      .btn-logout {
+        width: 100%;
+        padding: 10px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-logout:hover {
+        background: #dc2626;
+      }
+
+      /* MAIN CONTENT */
+      .main {
+        margin-left: 260px;
+        flex-grow: 1;
+        padding: 35px 40px;
+        max-width: calc(100vw - 260px);
+      }
+
+      .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .header-bar h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .header-bar p {
+        color: #64748b;
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      /* STATS GRID */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+
+      .stat-icon.pending {
+        background: #fef3c7;
+        color: #d97706;
+        border: 2px solid #f59e0b;
+      }
+      .stat-icon.revenue {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      .stat-icon.orders {
+        background: #e0e7ff;
+        color: #4338ca;
+      }
+      .stat-icon.products {
+        background: #f3e8ff;
+        color: #7e22ce;
+      }
+      .stat-icon.alerts {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .stat-info h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.2;
+      }
+
+      .stat-info p {
+        font-size: 11px;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-top: 2px;
+      }
+
+      /* SECTIONS & BOXES */
+      .dashboard-section {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        overflow: hidden;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .section-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .btn-primary {
+        background: #0f172a;
+        color: white;
+        padding: 9px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-primary:hover {
+        background: #1e293b;
+      }
+
+      /* TABLES */
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 14px;
+      }
+
+      th {
+        background: #f8fafc;
+        padding: 14px 20px;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      td {
+        padding: 14px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        vertical-align: middle;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:hover td {
+        background: #f8fafc;
+      }
+
+      /* BADGES */
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .badge-pending {
+        background: #fef3c7;
+        color: #b45309;
+        border: 1px solid #fde68a;
+      }
+      .badge-confirmed {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+      .badge-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .badge-in-stock {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .badge-low-stock {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-out-of-stock {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      /* ACTION BUTTONS */
+      .btn-action {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: 0.2s;
+        margin-right: 4px;
+      }
+
+      .btn-confirm {
+        background: #10b981;
+        color: white;
+      }
+
+      .btn-confirm:hover {
+        background: #059669;
+      }
+
+      .btn-cancel {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .btn-cancel:hover {
+        background: #fecaca;
+      }
+
+      .btn-edit {
+        background: #f1f5f9;
+        color: #334155;
+        border-color: #cbd5e1;
+      }
+
+      .btn-edit:hover {
+        background: #e2e8f0;
+      }
+
+      .btn-delete {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .btn-delete:hover {
+        background: #fecaca;
+      }
+
+      /* FILTER TABS */
+      .filter-tabs {
+        display: flex;
+        gap: 8px;
+      }
+
+      .tab-btn {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #475569;
+        transition: 0.2s;
+      }
+
+      .tab-btn:hover {
+        background: #e2e8f0;
+      }
+
+      .tab-btn.active {
+        background: #0f172a;
+        color: white;
+        border-color: #0f172a;
+      }
+
+      /* MODALS */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 12px;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        animation: modalFadeIn 0.2s ease;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .modal-header h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        color: #94a3b8;
+      }
+
+      .modal-body {
+        padding: 24px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 6px;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1e293b;
+      }
+
+      .modal-footer {
+        padding: 16px 24px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
         .sidebar {
-            width: 260px;
-            background: #0f172a;
-            color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            padding: 24px 18px;
-            z-index: 100;
+          width: 70px;
+          padding: 16px 8px;
         }
-
+        .sidebar-logo h2,
+        .sidebar-logo p,
+        .menu span,
+        .user-pill .info,
+        .btn-logout span {
+          display: none;
+        }
         .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #1e293b;
+          justify-content: center;
+          padding-bottom: 15px;
         }
-
-        .sidebar-logo .icon {
-            font-size: 26px;
-            background: #1e293b;
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-logo h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #f8fafc;
-        }
-
-        .sidebar-logo h2 span {
-            color: #d4af37;
-        }
-
-        .sidebar-logo p {
-            font-size: 11px;
-            color: #94a3b8;
-            letter-spacing: 0.5px;
-        }
-
-        .menu {
-            list-style: none;
-            margin-top: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex-grow: 1;
-        }
-
         .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+          justify-content: center;
+          padding: 12px 0;
         }
-
-        .menu a:hover {
-            background: #1e293b;
-            color: #f8fafc;
-        }
-
-        .menu a.active {
-            background: #d4af37;
-            color: #0f172a;
-            font-weight: 700;
-        }
-
-        .sidebar-footer {
-            border-top: 1px solid #1e293b;
-            padding-top: 18px;
-        }
-
         .user-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            padding: 8px 10px;
-            background: #1e293b;
-            border-radius: 8px;
+          justify-content: center;
+          padding: 6px 0;
         }
-
-        .user-pill .avatar {
-            width: 32px;
-            height: 32px;
-            background: #d4af37;
-            color: #0f172a;
-            font-weight: bold;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .user-pill .info {
-            font-size: 12px;
-            line-height: 1.3;
-            overflow: hidden;
-        }
-
-        .user-pill .name {
-            font-weight: 600;
-            color: #f8fafc;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .user-pill .role {
-            color: #94a3b8;
-            font-size: 11px;
-        }
-
-        .btn-logout {
-            width: 100%;
-            padding: 10px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-logout:hover {
-            background: #dc2626;
-        }
-
-        /* MAIN CONTENT */
         .main {
-            margin-left: 260px;
-            flex-grow: 1;
-            padding: 35px 40px;
-            max-width: calc(100vw - 260px);
+          margin-left: 70px;
+          padding: 20px;
+          max-width: calc(100vw - 70px);
         }
-
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .header-bar h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .header-bar p {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        /* STATS GRID */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
-        .stat-icon.pending { background: #fef3c7; color: #d97706; border: 2px solid #f59e0b; }
-        .stat-icon.revenue { background: #dcfce7; color: #16a34a; }
-        .stat-icon.orders { background: #e0e7ff; color: #4338ca; }
-        .stat-icon.products { background: #f3e8ff; color: #7e22ce; }
-        .stat-icon.alerts { background: #fee2e2; color: #dc2626; }
-
-        .stat-info h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1.2;
-        }
-
-        .stat-info p {
-            font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        /* SECTIONS & BOXES */
-        .dashboard-section {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #e2e8f0;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .section-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .btn-primary {
-            background: #0f172a;
-            color: white;
-            padding: 9px 16px;
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary:hover {
-            background: #1e293b;
-        }
-
-        /* TABLES */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        th {
-            background: #f8fafc;
-            padding: 14px 20px;
-            color: #64748b;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        td {
-            padding: 14px 20px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
-            vertical-align: middle;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: #f8fafc;
-        }
-
-        /* BADGES */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
-        .badge-confirmed { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .badge-cancelled { background: #fee2e2; color: #991b1b; }
-        .badge-in-stock { background: #dcfce7; color: #166534; }
-        .badge-low-stock { background: #fef3c7; color: #92400e; }
-        .badge-out-of-stock { background: #fee2e2; color: #991b1b; }
-
-        /* ACTION BUTTONS */
-        .btn-action {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: 0.2s;
-            margin-right: 4px;
-        }
-
-        .btn-confirm {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-confirm:hover {
-            background: #059669;
-        }
-
-        .btn-cancel {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .btn-cancel:hover {
-            background: #fecaca;
-        }
-
-        .btn-edit {
-            background: #f1f5f9;
-            color: #334155;
-            border-color: #cbd5e1;
-        }
-
-        .btn-edit:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-delete {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .btn-delete:hover {
-            background: #fecaca;
-        }
-
-        /* FILTER TABS */
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-        }
-
-        .tab-btn {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #475569;
-            transition: 0.2s;
-        }
-
-        .tab-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .tab-btn.active {
-            background: #0f172a;
-            color: white;
-            border-color: #0f172a;
-        }
-
-        /* MODALS */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            max-width: 520px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-            animation: modalFadeIn 0.2s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .modal-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: #94a3b8;
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 6px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #1e293b;
-        }
-
-        .modal-footer {
-            padding: 16px 24px;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 70px;
-                padding: 16px 8px;
-            }
-            .sidebar-logo h2, .sidebar-logo p, .menu span, .user-pill .info, .btn-logout span {
-                display: none;
-            }
-            .sidebar-logo {
-                justify-content: center;
-                padding-bottom: 15px;
-            }
-            .menu a {
-                justify-content: center;
-                padding: 12px 0;
-            }
-            .user-pill {
-                justify-content: center;
-                padding: 6px 0;
-            }
-            .main {
-                margin-left: 70px;
-                padding: 20px;
-                max-width: calc(100vw - 70px);
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div>
-            <div class="sidebar-logo">
-                <div class="icon">🛒</div>
-                <div>
-                    <h2>Urban<span>Wear</span></h2>
-                    <p>Management System</p>
-                </div>
-            </div>
-
-            <ul class="menu">
-                <li><a href="#overviewSection" class="active">📊 <span>Overview</span></a></li>
-                <li><a href="#salesSection">🧾 <span>Orders & Approvals</span></a></li>
-                <li><a href="#inventorySection">📦 <span>Products & Stock</span></a></li>
-                <li><a href="#usersSection">👥 <span>Users</span></a></li>
-                <li><a href="../shop.html" target="_blank">🛍️ <span>Visit Storefront</span></a></li>
-            </ul>
+      <div>
+        <div class="sidebar-logo">
+          <div class="icon">🛒</div>
+          <div>
+            <h2>Urban<span>Wear</span></h2>
+            <p>Management System</p>
+          </div>
         </div>
 
-        <div class="sidebar-footer">
-            <div class="user-pill">
-                <div class="avatar" id="sidebarAvatar">A</div>
-                <div class="info">
-                    <div class="name" id="sidebarUserName">Admin</div>
-                    <div class="role">Administrator</div>
-                </div>
-            </div>
-            <button onclick="handleLogout()" class="btn-logout">
-                <span>🚪 Logout</span>
-            </button>
+        <ul class="menu">
+          <li>
+            <a href="#overviewSection" class="active"
+              >📊 <span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="#salesSection">🧾 <span>Orders & Approvals</span></a>
+          </li>
+          <li>
+            <a href="#inventorySection">📦 <span>Products & Stock</span></a>
+          </li>
+          <li>
+            <a href="#usersSection">👥 <span>Users</span></a>
+          </li>
+          <li>
+            <a href="../shop.html" target="_blank"
+              >🛍️ <span>Visit Storefront</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <div class="avatar" id="sidebarAvatar">A</div>
+          <div class="info">
+            <div class="name" id="sidebarUserName">Admin</div>
+            <div class="role">Administrator</div>
+          </div>
         </div>
+        <button onclick="handleLogout()" class="btn-logout">
+          <span>🚪 Logout</span>
+        </button>
+      </div>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="main">
-        <header class="header-bar" id="overviewSection">
-            <div>
-                <h1>Dashboard Overview</h1>
-                <p>Welcome back! Today is <span id="currentDateDisplay" style="font-weight:600; color:#0f172a;"></span></p>
-            </div>
-            <div class="header-actions">
-                <a href="../shop.html" class="btn-primary" style="text-decoration:none;">
-                    View Store ↗
-                </a>
-                <button onclick="openAddProductModal()" class="btn-primary" style="background:#d4af37; color:#0f172a;">
-                    + Add Product
-                </button>
-            </div>
-        </header>
+      <header class="header-bar" id="overviewSection">
+        <div>
+          <h1>Dashboard Overview</h1>
+          <p>
+            Welcome back! Today is
+            <span
+              id="currentDateDisplay"
+              style="font-weight: 600; color: #0f172a"
+            ></span>
+          </p>
+        </div>
+        <div class="header-actions">
+          <a
+            href="../shop.html"
+            class="btn-primary"
+            style="text-decoration: none"
+          >
+            View Store ↗
+          </a>
+          <button
+            onclick="openAddProductModal()"
+            class="btn-primary"
+            style="background: #d4af37; color: #0f172a"
+          >
+            + Add Product
+          </button>
+        </div>
+      </header>
 
-        <!-- STATS GRID -->
-        <section class="stats-grid">
-            <div class="stat-card" style="border-left: 4px solid #f59e0b;">
-                <div class="stat-icon pending">⏳</div>
-                <div class="stat-info">
-                    <h3 id="statPending" style="color:#d97706;">0</h3>
-                    <p>Pending Confirmation</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon revenue">💰</div>
-                <div class="stat-info">
-                    <h3 id="statRevenue">$0.00</h3>
-                    <p>Confirmed Revenue</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon orders">📦</div>
-                <div class="stat-info">
-                    <h3 id="statOrders">0</h3>
-                    <p>Total Orders</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon products">👕</div>
-                <div class="stat-info">
-                    <h3 id="statProducts">0</h3>
-                    <p>Total Products</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon alerts">⚠️</div>
-                <div class="stat-info">
-                    <h3 id="statAlerts">0</h3>
-                    <p>Low Stock Alerts</p>
-                </div>
-            </div>
-        </section>
+      <!-- STATS GRID -->
+      <section class="stats-grid">
+        <div class="stat-card" style="border-left: 4px solid #f59e0b">
+          <div class="stat-icon pending">⏳</div>
+          <div class="stat-info">
+            <h3 id="statPending" style="color: #d97706">0</h3>
+            <p>Pending Confirmation</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon revenue">💰</div>
+          <div class="stat-info">
+            <h3 id="statRevenue">$0.00</h3>
+            <p>Confirmed Revenue</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orders">📦</div>
+          <div class="stat-info">
+            <h3 id="statOrders">0</h3>
+            <p>Total Orders</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon products">👕</div>
+          <div class="stat-info">
+            <h3 id="statProducts">0</h3>
+            <p>Total Products</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon alerts">⚠️</div>
+          <div class="stat-info">
+            <h3 id="statAlerts">0</h3>
+            <p>Low Stock Alerts</p>
+          </div>
+        </div>
+      </section>
 
-        <!-- ORDERS & APPROVAL SECTION -->
-        <section class="dashboard-section" id="salesSection">
-            <div class="section-header">
-                <div>
-                    <h2>Orders & Admin Confirmations</h2>
-                    <p style="font-size:13px; color:#64748b; margin-top:2px;">Review incoming customer orders and confirm or cancel them.</p>
-                </div>
+      <!-- ORDERS & APPROVAL SECTION -->
+      <section class="dashboard-section" id="salesSection">
+        <div class="section-header">
+          <div>
+            <h2>Orders & Admin Confirmations</h2>
+            <p style="font-size: 13px; color: #64748b; margin-top: 2px">
+              Review incoming customer orders and confirm or cancel them.
+            </p>
+          </div>
 
-                <div class="filter-tabs">
-                    <button class="tab-btn active" onclick="filterOrders('All', this)">All Orders</button>
-                    <button class="tab-btn" onclick="filterOrders('Pending', this)" id="tabPendingBtn">Pending</button>
-                    <button class="tab-btn" onclick="filterOrders('Confirmed', this)">Confirmed</button>
-                    <button class="tab-btn" onclick="filterOrders('Cancelled', this)">Cancelled</button>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date / Time</th>
-                            <th>Customer</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Admin Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+          <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterOrders('All', this)">
+              All Orders
+            </button>
+            <button
+              class="tab-btn"
+              onclick="filterOrders('Pending', this)"
+              id="tabPendingBtn"
+            >
+              Pending
+            </button>
+            <button class="tab-btn" onclick="filterOrders('Confirmed', this)">
+              Confirmed
+            </button>
+            <button class="tab-btn" onclick="filterOrders('Cancelled', this)">
+              Cancelled
+            </button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date / Time</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <!-- PRODUCTS & STOCK STATUS TABLE -->
-        <section class="dashboard-section" id="inventorySection">
-            <div class="section-header">
-                <h2>Product Inventory & Stock Status</h2>
-                <button onclick="openAddProductModal()" class="btn-primary">
-                    + Add New Product
-                </button>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock Count</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+      <!-- PRODUCTS & STOCK STATUS TABLE -->
+      <section class="dashboard-section" id="inventorySection">
+        <div class="section-header">
+          <h2>Product Inventory & Stock Status</h2>
+          <button onclick="openAddProductModal()" class="btn-primary">
+            + Add New Product
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock Count</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <!-- USER MANAGEMENT -->
-        <section class="dashboard-section" id="usersSection">
-            <div class="section-header">
-                <h2>Registered Users & Roles</h2>
-                <button onclick="openAddUserModal()" class="btn-primary">
-                    + Add New User
-                </button>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Email Address</th>
-                            <th>Gender</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+      <!-- USER MANAGEMENT -->
+      <section class="dashboard-section" id="usersSection">
+        <div class="section-header">
+          <h2>Registered Users & Roles</h2>
+          <button onclick="openAddUserModal()" class="btn-primary">
+            + Add New User
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Email Address</th>
+                <th>Gender</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
     <!-- PRODUCT MODAL (ADD & EDIT) -->
     <div class="modal" id="productModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalProductTitle">Add New Product</h3>
-                <button class="modal-close" onclick="closeProductModal()">&times;</button>
-            </div>
-            <form id="productForm" onsubmit="handleProductSubmit(event)">
-                <div class="modal-body">
-                    <input type="hidden" id="formProductId">
-                    <div class="form-group">
-                        <label>Product Name *</label>
-                        <input type="text" id="formProductName" required placeholder="e.g. Classic Oversized Hoodie">
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                        <div class="form-group">
-                            <label>Category *</label>
-                            <select id="formProductCategory" required>
-                                <option value="Men">Men</option>
-                                <option value="Women">Women</option>
-                                <option value="Shoes">Shoes</option>
-                                <option value="Accessories">Accessories</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Price ($) *</label>
-                            <input type="number" id="formProductPrice" required step="0.01" min="0" placeholder="29.99">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Stock Quantity *</label>
-                        <input type="number" id="formProductStock" required min="0" placeholder="20">
-                    </div>
-                    <div class="form-group">
-                        <label>Image URL *</label>
-                        <input type="url" id="formProductImage" required placeholder="https://images.unsplash.com/...">
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="formProductDesc" rows="2" placeholder="Brief product summary..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action btn-edit" onclick="closeProductModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" style="background:#0f172a;">Save Product</button>
-                </div>
-            </form>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalProductTitle">Add New Product</h3>
+          <button class="modal-close" onclick="closeProductModal()">
+            &times;
+          </button>
         </div>
+        <form id="productForm" onsubmit="handleProductSubmit(event)">
+          <div class="modal-body">
+            <input type="hidden" id="formProductId" />
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input
+                type="text"
+                id="formProductName"
+                required
+                placeholder="e.g. Classic Oversized Hoodie"
+              />
+            </div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px"
+            >
+              <div class="form-group">
+                <label>Category *</label>
+                <select id="formProductCategory" required>
+                  <option value="Men">Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Accessories">Accessories</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Price ($) *</label>
+                <input
+                  type="number"
+                  id="formProductPrice"
+                  required
+                  step="0.01"
+                  min="0"
+                  placeholder="29.99"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Stock Quantity *</label>
+              <input
+                type="number"
+                id="formProductStock"
+                required
+                min="0"
+                placeholder="20"
+              />
+            </div>
+            <div class="form-group">
+              <label>Image URL *</label>
+              <input
+                type="url"
+                id="formProductImage"
+                required
+                placeholder="https://images.unsplash.com/..."
+              />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                id="formProductDesc"
+                rows="2"
+                placeholder="Brief product summary..."
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-action btn-edit"
+              onclick="closeProductModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn-primary"
+              style="background: #0f172a"
+            >
+              Save Product
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- ADD USER MODAL -->
     <div class="modal" id="userModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New User</h3>
-                <button class="modal-close" onclick="closeUserModal()">&times;</button>
-            </div>
-            <form id="userForm" onsubmit="handleUserSubmit(event)">
-                <div class="modal-body">
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                        <div class="form-group">
-                            <label>First Name *</label>
-                            <input type="text" id="formUserFirst" required placeholder="Alex">
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name *</label>
-                            <input type="text" id="formUserLast" required placeholder="Rivers">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address *</label>
-                        <input type="email" id="formUserEmail" required placeholder="alex@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Password *</label>
-                        <input type="password" id="formUserPass" required minlength="4" placeholder="••••••••">
-                    </div>
-                    <div class="form-group">
-                        <label>Role</label>
-                        <select id="formUserRole">
-                            <option value="user">User (Customer)</option>
-                            <option value="admin">Administrator</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action btn-edit" onclick="closeUserModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" style="background:#0f172a;">Create User</button>
-                </div>
-            </form>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New User</h3>
+          <button class="modal-close" onclick="closeUserModal()">
+            &times;
+          </button>
         </div>
+        <form id="userForm" onsubmit="handleUserSubmit(event)">
+          <div class="modal-body">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px"
+            >
+              <div class="form-group">
+                <label>First Name *</label>
+                <input
+                  type="text"
+                  id="formUserFirst"
+                  required
+                  placeholder="Alex"
+                />
+              </div>
+              <div class="form-group">
+                <label>Last Name *</label>
+                <input
+                  type="text"
+                  id="formUserLast"
+                  required
+                  placeholder="Rivers"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input
+                type="email"
+                id="formUserEmail"
+                required
+                placeholder="alex@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label>Password *</label>
+              <input
+                type="password"
+                id="formUserPass"
+                required
+                minlength="4"
+                placeholder="••••••••"
+              />
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="formUserRole">
+                <option value="user">User (Customer)</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-action btn-edit"
+              onclick="closeUserModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn-primary"
+              style="background: #0f172a"
+            >
+              Create User
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script src="../js/store.js"></script>
     <script>
-        // Check Authentication - Admin Only
-        const currentUser = Store.getCurrentUser();
-        if (!currentUser || currentUser.role !== "admin") {
-            alert("Access Denied! Only administrators can access the UrbanWear Management Dashboard.");
-            window.location.href = "../login.html";
+      // Check Authentication - Admin Only
+      const currentUser = Store.getCurrentUser();
+      if (!currentUser || currentUser.role !== "admin") {
+        alert(
+          "Access Denied! Only administrators can access the UrbanWear Management Dashboard.",
+        );
+        window.location.href = "../login.html";
+      }
+
+      let currentOrderFilter = "All";
+
+      // Initialize UI
+      function initDashboard() {
+        if (currentUser) {
+          const nameEl = document.getElementById("sidebarUserName");
+          const avatarEl = document.getElementById("sidebarAvatar");
+          if (nameEl)
+            nameEl.textContent = `${currentUser.first_name || "Admin"} ${currentUser.last_name || ""}`;
+          if (avatarEl)
+            avatarEl.textContent = (
+              currentUser.first_name ? currentUser.first_name[0] : "A"
+            ).toUpperCase();
         }
 
-        let currentOrderFilter = "All";
-
-        // Initialize UI
-        function initDashboard() {
-            if (currentUser) {
-                const nameEl = document.getElementById("sidebarUserName");
-                const avatarEl = document.getElementById("sidebarAvatar");
-                if (nameEl) nameEl.textContent = `${currentUser.first_name || 'Admin'} ${currentUser.last_name || ''}`;
-                if (avatarEl) avatarEl.textContent = (currentUser.first_name ? currentUser.first_name[0] : 'A').toUpperCase();
-            }
-
-            const dateEl = document.getElementById("currentDateDisplay");
-            if (dateEl) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                dateEl.textContent = new Date().toLocaleDateString("en-US", options);
-            }
-
-            loadStats();
-            renderOrdersTable();
-            renderInventoryTable();
-            renderUsersTable();
+        const dateEl = document.getElementById("currentDateDisplay");
+        if (dateEl) {
+          const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          };
+          dateEl.textContent = new Date().toLocaleDateString("en-US", options);
         }
 
-        function loadStats() {
-            const products = Store.getProducts();
-            const orders = Store.getOrders();
-            const users = Store.getUsers();
+        loadStats();
+        renderOrdersTable();
+        renderInventoryTable();
+        renderUsersTable();
+      }
 
-            const pendingOrders = orders.filter(o => o.status === "Pending");
-            const confirmedRevenue = orders
-                .filter(o => o.status === "Confirmed" || o.status === "Completed")
-                .reduce((sum, ord) => sum + (Number(ord.total) || 0), 0);
-            const lowStockCount = products.filter(p => p.stock <= 5).length;
+      function loadStats() {
+        const products = Store.getProducts();
+        const orders = Store.getOrders();
+        const users = Store.getUsers();
 
-            document.getElementById("statPending").textContent = pendingOrders.length;
-            document.getElementById("statRevenue").textContent = "$" + confirmedRevenue.toFixed(2);
-            document.getElementById("statOrders").textContent = orders.length;
-            document.getElementById("statProducts").textContent = products.length;
-            document.getElementById("statAlerts").textContent = lowStockCount;
+        const pendingOrders = orders.filter((o) => o.status === "Pending");
+        const confirmedRevenue = orders
+          .filter((o) => o.status === "Confirmed" || o.status === "Completed")
+          .reduce((sum, ord) => sum + (Number(ord.total) || 0), 0);
+        const lowStockCount = products.filter((p) => p.stock <= 5).length;
 
-            const tabPending = document.getElementById("tabPendingBtn");
-            if (tabPending) {
-                tabPending.textContent = `Pending (${pendingOrders.length})`;
-            }
+        document.getElementById("statPending").textContent =
+          pendingOrders.length;
+        document.getElementById("statRevenue").textContent =
+          "$" + confirmedRevenue.toFixed(2);
+        document.getElementById("statOrders").textContent = orders.length;
+        document.getElementById("statProducts").textContent = products.length;
+        document.getElementById("statAlerts").textContent = lowStockCount;
+
+        const tabPending = document.getElementById("tabPendingBtn");
+        if (tabPending) {
+          tabPending.textContent = `Pending (${pendingOrders.length})`;
+        }
+      }
+
+      function filterOrders(status, btn) {
+        currentOrderFilter = status;
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+        renderOrdersTable();
+      }
+
+      function renderOrdersTable() {
+        const tbody = document.getElementById("ordersTableBody");
+        if (!tbody) return;
+        const orders = Store.getOrders();
+        tbody.innerHTML = "";
+
+        let filtered = orders;
+        if (currentOrderFilter !== "All") {
+          filtered = orders.filter((o) => o.status === currentOrderFilter);
         }
 
-        function filterOrders(status, btn) {
-            currentOrderFilter = status;
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            if (btn) btn.classList.add("active");
-            renderOrdersTable();
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:35px; color:#888;">No ${currentOrderFilter !== "All" ? currentOrderFilter.toLowerCase() : ""} orders found.</td></tr>`;
+          return;
         }
 
-        function renderOrdersTable() {
-            const tbody = document.getElementById("ordersTableBody");
-            if (!tbody) return;
-            const orders = Store.getOrders();
-            tbody.innerHTML = "";
+        filtered.forEach((order) => {
+          const itemsSummary =
+            (order.items || []).map((i) => `${i.qty}x ${i.name}`).join(", ") ||
+            "Fashion items";
 
-            let filtered = orders;
-            if (currentOrderFilter !== "All") {
-                filtered = orders.filter(o => o.status === currentOrderFilter);
-            }
+          let badgeClass = "badge-pending";
+          let statusLabel = order.status || "Pending";
+          if (order.status === "Confirmed" || order.status === "Completed")
+            badgeClass = "badge-confirmed";
+          if (order.status === "Cancelled") badgeClass = "badge-cancelled";
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:35px; color:#888;">No ${currentOrderFilter !== 'All' ? currentOrderFilter.toLowerCase() : ''} orders found.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(order => {
-                const itemsSummary = (order.items || []).map(i => `${i.qty}x ${i.name}`).join(", ") || "Fashion items";
-
-                let badgeClass = "badge-pending";
-                let statusLabel = order.status || "Pending";
-                if (order.status === "Confirmed" || order.status === "Completed") badgeClass = "badge-confirmed";
-                if (order.status === "Cancelled") badgeClass = "badge-cancelled";
-
-                let actionHtml = "";
-                if (order.status === "Pending") {
-                    actionHtml = `
+          let actionHtml = "";
+          if (order.status === "Pending") {
+            actionHtml = `
                         <button class="btn-action btn-confirm" onclick="handleConfirmOrder('${order.id}')" title="Confirm customer order">
                             ✓ Confirm
                         </button>
@@ -916,23 +1105,23 @@
                             ✗ Cancel
                         </button>
                     `;
-                } else if (order.status === "Confirmed") {
-                    actionHtml = `
+          } else if (order.status === "Confirmed") {
+            actionHtml = `
                         <span style="font-size:12px; color:#166534; font-weight:600; margin-right:6px;">Approved</span>
                         <button class="btn-action btn-cancel" onclick="handleCancelOrder('${order.id}')" title="Cancel order and restore stock">
                             Cancel
                         </button>
                     `;
-                } else if (order.status === "Cancelled") {
-                    actionHtml = `<span style="font-size:12px; color:#991b1b; font-weight:500;">Restocked to inventory</span>`;
-                }
+          } else if (order.status === "Cancelled") {
+            actionHtml = `<span style="font-size:12px; color:#991b1b; font-weight:500;">Restocked to inventory</span>`;
+          }
 
-                tbody.innerHTML += `
+          tbody.innerHTML += `
                     <tr>
                         <td><strong>${order.id}</strong></td>
                         <td>
                             <div>${order.date}</div>
-                            <div style="font-size:11px; color:#64748b;">${order.time || ''}</div>
+                            <div style="font-size:11px; color:#64748b;">${order.time || ""}</div>
                         </td>
                         <td>
                             <div><strong>${order.customer}</strong></div>
@@ -944,63 +1133,69 @@
                         <td>${actionHtml}</td>
                     </tr>
                 `;
-            });
+        });
+      }
+
+      function handleConfirmOrder(orderId) {
+        const res = Store.updateOrderStatus(orderId, "Confirmed");
+        if (res.success) {
+          alert(`Order ${orderId} has been CONFIRMED by admin!`);
+          loadStats();
+          renderOrdersTable();
+        } else {
+          alert(res.message);
+        }
+      }
+
+      function handleCancelOrder(orderId) {
+        if (
+          confirm(
+            `Cancel order ${orderId}? The purchased items will automatically be returned to inventory stock.`,
+          )
+        ) {
+          const res = Store.updateOrderStatus(orderId, "Cancelled");
+          if (res.success) {
+            alert(
+              `Order ${orderId} has been cancelled and stock has been restored.`,
+            );
+            loadStats();
+            renderOrdersTable();
+            renderInventoryTable();
+          } else {
+            alert(res.message);
+          }
+        }
+      }
+
+      function renderInventoryTable() {
+        const tbody = document.getElementById("inventoryTableBody");
+        if (!tbody) return;
+        const products = Store.getProducts();
+        tbody.innerHTML = "";
+
+        if (products.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#888;">No products in inventory. Click "+ Add New Product" to get started.</td></tr>`;
+          return;
         }
 
-        function handleConfirmOrder(orderId) {
-            const res = Store.updateOrderStatus(orderId, "Confirmed");
-            if (res.success) {
-                alert(`Order ${orderId} has been CONFIRMED by admin!`);
-                loadStats();
-                renderOrdersTable();
-            } else {
-                alert(res.message);
-            }
-        }
+        products.forEach((product) => {
+          let badgeClass = "badge-in-stock";
+          let statusText = "In Stock";
+          if (product.stock <= 0) {
+            badgeClass = "badge-out-of-stock";
+            statusText = "Out of Stock";
+          } else if (product.stock <= 5) {
+            badgeClass = "badge-low-stock";
+            statusText = "Low Stock";
+          }
 
-        function handleCancelOrder(orderId) {
-            if (confirm(`Cancel order ${orderId}? The purchased items will automatically be returned to inventory stock.`)) {
-                const res = Store.updateOrderStatus(orderId, "Cancelled");
-                if (res.success) {
-                    alert(`Order ${orderId} has been cancelled and stock has been restored.`);
-                    loadStats();
-                    renderOrdersTable();
-                    renderInventoryTable();
-                } else {
-                    alert(res.message);
-                }
-            }
-        }
-
-        function renderInventoryTable() {
-            const tbody = document.getElementById("inventoryTableBody");
-            if (!tbody) return;
-            const products = Store.getProducts();
-            tbody.innerHTML = "";
-
-            if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#888;">No products in inventory. Click "+ Add New Product" to get started.</td></tr>`;
-                return;
-            }
-
-            products.forEach(product => {
-                let badgeClass = "badge-in-stock";
-                let statusText = "In Stock";
-                if (product.stock <= 0) {
-                    badgeClass = "badge-out-of-stock";
-                    statusText = "Out of Stock";
-                } else if (product.stock <= 5) {
-                    badgeClass = "badge-low-stock";
-                    statusText = "Low Stock";
-                }
-
-                tbody.innerHTML += `
+          tbody.innerHTML += `
                     <tr>
                         <td>
                             <img src="${product.image}" alt="${product.name}" style="width:48px; height:48px; object-fit:cover; border-radius:6px;" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80'">
                         </td>
                         <td><strong>${product.name}</strong></td>
-                        <td><span style="background:#f1f5f9; padding:3px 8px; border-radius:4px; font-size:12px;">${product.category || 'Apparel'}</span></td>
+                        <td><span style="background:#f1f5f9; padding:3px 8px; border-radius:4px; font-size:12px;">${product.category || "Apparel"}</span></td>
                         <td>$${Number(product.price).toFixed(2)}</td>
                         <td><strong>${product.stock}</strong></td>
                         <td><span class="badge ${badgeClass}">${statusText}</span></td>
@@ -1010,162 +1205,187 @@
                         </td>
                     </tr>
                 `;
-            });
-        }
+        });
+      }
 
-        function renderUsersTable() {
-            const tbody = document.getElementById("usersTableBody");
-            if (!tbody) return;
-            const users = Store.getUsers();
-            tbody.innerHTML = "";
+      function renderUsersTable() {
+        const tbody = document.getElementById("usersTableBody");
+        if (!tbody) return;
+        const users = Store.getUsers();
+        tbody.innerHTML = "";
 
-            users.forEach(user => {
-                const isAdmin = user.role === "admin";
-                const isMasterAdmin = user.email.toLowerCase() === "admin@gmail.com";
-                const deleteBtn = isMasterAdmin
-                    ? `<span style="font-size:11px; color:#94a3b8;">Protected</span>`
-                    : `<button class="btn-action btn-delete" onclick="handleDeleteUser('${user.email}')">Delete</button>`;
+        users.forEach((user) => {
+          const isAdmin = user.role === "admin";
+          const isMasterAdmin = user.email.toLowerCase() === "admin@gmail.com";
+          const deleteBtn = isMasterAdmin
+            ? `<span style="font-size:11px; color:#94a3b8;">Protected</span>`
+            : `<button class="btn-action btn-delete" onclick="handleDeleteUser('${user.email}')">Delete</button>`;
 
-                tbody.innerHTML += `
+          tbody.innerHTML += `
                     <tr>
-                        <td><strong>${user.first_name || ''} ${user.last_name || ''}</strong></td>
+                        <td><strong>${user.first_name || ""} ${user.last_name || ""}</strong></td>
                         <td>${user.email}</td>
-                        <td>${user.gender || 'Not Specified'}</td>
+                        <td>${user.gender || "Not Specified"}</td>
                         <td>
-                            <span class="badge ${isAdmin ? 'badge-low-stock' : 'badge-completed'}" style="${isAdmin ? 'background:#fef3c7; color:#b45309;' : 'background:#e0e7ff; color:#3730a3;'}">
-                                ${user.role || 'user'}
+                            <span class="badge ${isAdmin ? "badge-low-stock" : "badge-completed"}" style="${isAdmin ? "background:#fef3c7; color:#b45309;" : "background:#e0e7ff; color:#3730a3;"}">
+                                ${user.role || "user"}
                             </span>
                         </td>
                         <td>${deleteBtn}</td>
                     </tr>
                 `;
-            });
+        });
+      }
+
+      // Product Modal Handlers
+      function openAddProductModal() {
+        document.getElementById("modalProductTitle").textContent =
+          "Add New Product";
+        document.getElementById("formProductId").value = "";
+        document.getElementById("formProductName").value = "";
+        document.getElementById("formProductCategory").value = "Men";
+        document.getElementById("formProductPrice").value = "";
+        document.getElementById("formProductStock").value = "15";
+        document.getElementById("formProductImage").value =
+          "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80";
+        document.getElementById("formProductDesc").value = "";
+        document.getElementById("productModal").classList.add("active");
+      }
+
+      function openEditProductModal(id) {
+        const product = Store.getProductById(id);
+        if (!product) return;
+
+        document.getElementById("modalProductTitle").textContent =
+          "Edit Product";
+        document.getElementById("formProductId").value = product.id;
+        document.getElementById("formProductName").value = product.name;
+        document.getElementById("formProductCategory").value =
+          product.category || "Men";
+        document.getElementById("formProductPrice").value = product.price;
+        document.getElementById("formProductStock").value = product.stock;
+        document.getElementById("formProductImage").value = product.image;
+        document.getElementById("formProductDesc").value =
+          product.description || "";
+        document.getElementById("productModal").classList.add("active");
+      }
+
+      function closeProductModal() {
+        document.getElementById("productModal").classList.remove("active");
+      }
+
+      function handleProductSubmit(e) {
+        e.preventDefault();
+        const id = document.getElementById("formProductId").value;
+        const name = document.getElementById("formProductName").value.trim();
+        const category = document.getElementById("formProductCategory").value;
+        const price = parseFloat(
+          document.getElementById("formProductPrice").value,
+        );
+        const stock = parseInt(
+          document.getElementById("formProductStock").value,
+        );
+        const image = document.getElementById("formProductImage").value.trim();
+        const description = document
+          .getElementById("formProductDesc")
+          .value.trim();
+
+        if (id) {
+          Store.updateProduct(id, {
+            name,
+            category,
+            price,
+            stock,
+            image,
+            description,
+          });
+          alert("Product updated successfully!");
+        } else {
+          Store.addProduct({
+            name,
+            category,
+            price,
+            stock,
+            image,
+            description,
+          });
+          alert("Product created successfully!");
         }
 
-        // Product Modal Handlers
-        function openAddProductModal() {
-            document.getElementById("modalProductTitle").textContent = "Add New Product";
-            document.getElementById("formProductId").value = "";
-            document.getElementById("formProductName").value = "";
-            document.getElementById("formProductCategory").value = "Men";
-            document.getElementById("formProductPrice").value = "";
-            document.getElementById("formProductStock").value = "15";
-            document.getElementById("formProductImage").value = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80";
-            document.getElementById("formProductDesc").value = "";
-            document.getElementById("productModal").classList.add("active");
+        closeProductModal();
+        loadStats();
+        renderInventoryTable();
+      }
+
+      function handleDeleteProduct(id) {
+        const product = Store.getProductById(id);
+        if (!product) return;
+        if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+          Store.deleteProduct(id);
+          loadStats();
+          renderInventoryTable();
+        }
+      }
+
+      // User Modal Handlers
+      function openAddUserModal() {
+        document.getElementById("formUserFirst").value = "";
+        document.getElementById("formUserLast").value = "";
+        document.getElementById("formUserEmail").value = "";
+        document.getElementById("formUserPass").value = "";
+        document.getElementById("formUserRole").value = "user";
+        document.getElementById("userModal").classList.add("active");
+      }
+
+      function closeUserModal() {
+        document.getElementById("userModal").classList.remove("active");
+      }
+
+      function handleUserSubmit(e) {
+        e.preventDefault();
+        const firstName = document.getElementById("formUserFirst").value.trim();
+        const lastName = document.getElementById("formUserLast").value.trim();
+        const email = document.getElementById("formUserEmail").value.trim();
+        const password = document.getElementById("formUserPass").value;
+        const role = document.getElementById("formUserRole").value;
+
+        const res = Store.addUser({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password,
+          role: role,
+          gender: "Not Specified",
+        });
+
+        if (!res.success) {
+          alert(res.message);
+          return;
         }
 
-        function openEditProductModal(id) {
-            const product = Store.getProductById(id);
-            if (!product) return;
+        alert("User account created!");
+        closeUserModal();
+        loadStats();
+        renderUsersTable();
+      }
 
-            document.getElementById("modalProductTitle").textContent = "Edit Product";
-            document.getElementById("formProductId").value = product.id;
-            document.getElementById("formProductName").value = product.name;
-            document.getElementById("formProductCategory").value = product.category || "Men";
-            document.getElementById("formProductPrice").value = product.price;
-            document.getElementById("formProductStock").value = product.stock;
-            document.getElementById("formProductImage").value = product.image;
-            document.getElementById("formProductDesc").value = product.description || "";
-            document.getElementById("productModal").classList.add("active");
-        }
-
-        function closeProductModal() {
-            document.getElementById("productModal").classList.remove("active");
-        }
-
-        function handleProductSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById("formProductId").value;
-            const name = document.getElementById("formProductName").value.trim();
-            const category = document.getElementById("formProductCategory").value;
-            const price = parseFloat(document.getElementById("formProductPrice").value);
-            const stock = parseInt(document.getElementById("formProductStock").value);
-            const image = document.getElementById("formProductImage").value.trim();
-            const description = document.getElementById("formProductDesc").value.trim();
-
-            if (id) {
-                Store.updateProduct(id, { name, category, price, stock, image, description });
-                alert("Product updated successfully!");
-            } else {
-                Store.addProduct({ name, category, price, stock, image, description });
-                alert("Product created successfully!");
-            }
-
-            closeProductModal();
-            loadStats();
-            renderInventoryTable();
-        }
-
-        function handleDeleteProduct(id) {
-            const product = Store.getProductById(id);
-            if (!product) return;
-            if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
-                Store.deleteProduct(id);
-                loadStats();
-                renderInventoryTable();
-            }
-        }
-
-        // User Modal Handlers
-        function openAddUserModal() {
-            document.getElementById("formUserFirst").value = "";
-            document.getElementById("formUserLast").value = "";
-            document.getElementById("formUserEmail").value = "";
-            document.getElementById("formUserPass").value = "";
-            document.getElementById("formUserRole").value = "user";
-            document.getElementById("userModal").classList.add("active");
-        }
-
-        function closeUserModal() {
-            document.getElementById("userModal").classList.remove("active");
-        }
-
-        function handleUserSubmit(e) {
-            e.preventDefault();
-            const firstName = document.getElementById("formUserFirst").value.trim();
-            const lastName = document.getElementById("formUserLast").value.trim();
-            const email = document.getElementById("formUserEmail").value.trim();
-            const password = document.getElementById("formUserPass").value;
-            const role = document.getElementById("formUserRole").value;
-
-            const res = Store.addUser({
-                first_name: firstName,
-                last_name: lastName,
-                email: email,
-                password: password,
-                role: role,
-                gender: "Not Specified"
-            });
-
-            if (!res.success) {
-                alert(res.message);
-                return;
-            }
-
-            alert("User account created!");
-            closeUserModal();
+      function handleDeleteUser(email) {
+        if (confirm(`Delete user account "${email}"?`)) {
+          const res = Store.deleteUser(email);
+          if (res.success) {
             loadStats();
             renderUsersTable();
+          } else {
+            alert(res.message);
+          }
         }
+      }
 
-        function handleDeleteUser(email) {
-            if (confirm(`Delete user account "${email}"?`)) {
-                const res = Store.deleteUser(email);
-                if (res.success) {
-                    loadStats();
-                    renderUsersTable();
-                } else {
-                    alert(res.message);
-                }
-            }
-        }
+      function handleLogout() {
+        Store.logout();
+      }
 
-        function handleLogout() {
-            Store.logout();
-        }
-
-        document.addEventListener("DOMContentLoaded", initDashboard);
+      document.addEventListener("DOMContentLoaded", initDashboard);
     </script>
-</body>
+  </body>
 </html>
