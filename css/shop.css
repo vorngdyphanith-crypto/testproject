@@ -99,11 +99,13 @@ nav b {
     font-weight: 700;
 }
 
+/* ================= FILTER ================= */
 /* ================= CATEGORY NAVBAR & FILTERS ================= */
 
 .filters {
     display: flex;
     align-items: center;
+    gap: 12px;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 35px;
@@ -125,6 +127,13 @@ nav b {
 /* Default pill style - NOT white, crisp dark slate text on sleek cool-grey */
 .filters .filter,
 .filter {
+    border: 1px solid #ddd;
+    background: white;
+    padding: 11px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
     background: #e2e8f0 !important;
     color: #0f172a !important;
     border: 1.5px solid #cbd5e1 !important;
@@ -144,6 +153,9 @@ nav b {
 
 .filters .filter:hover,
 .filter:hover {
+    background: #111;
+    color: white;
+    border-color: #111;
     background: #1e293b !important;
     color: #ffffff !important;
     border-color: #1e293b !important;
@@ -154,6 +166,9 @@ nav b {
 /* Active Category Pill */
 .filters .filter.active,
 .filter.active {
+    background: #111;
+    color: white;
+    border-color: #111;
     background: #0f172a !important;
     color: #ffffff !important;
     border-color: #0f172a !important;
@@ -161,6 +176,7 @@ nav b {
     transform: translateY(-1px);
 }
 
+/* Sort */
 .filters .filter.active::after,
 .filter.active::after {
     content: "";
@@ -189,6 +205,10 @@ nav b {
 
 #sort {
     margin-left: auto;
+    padding: 11px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
     padding: 9px 36px 9px 16px;
     border: 1.5px solid #cbd5e1;
     border-radius: 9999px;
