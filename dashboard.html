@@ -1029,7 +1029,18 @@
                   id="btnModeFile"
                   onclick="setImageMode('file')"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="M21 15l-5-5L5 21" />
+                  </svg>
                   Choose Image
                 </button>
                 <button
@@ -1038,7 +1049,21 @@
                   id="btnModeUrl"
                   onclick="setImageMode('url')"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                    />
+                    <path
+                      d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                    />
+                  </svg>
                   URL Link
                 </button>
               </div>
@@ -1046,24 +1071,52 @@
               <!-- OPTION 1: CHOOSE IMAGE FILE -->
               <div id="imageFileInputGroup" class="image-input-pane">
                 <label class="file-dropzone" for="formProductFileInput">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  <span class="dropzone-text">Click to choose image or drag & drop</span>
-                  <span class="dropzone-sub">PNG, JPG, WEBP, GIF up to 5MB</span>
+                  <svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#64748b"
+                    stroke-width="1.8"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <span class="dropzone-text"
+                    >Click to choose image or drag & drop</span
+                  >
+                  <span class="dropzone-sub"
+                    >PNG, JPG, WEBP, GIF up to 5MB</span
+                  >
                   <input
                     type="file"
                     id="formProductFileInput"
                     accept="image/*"
-                    style="display:none;"
+                    style="display: none"
                     onchange="handleProductFileSelect(event)"
                   />
                 </label>
-                <div id="fileSelectedInfo" style="display:none; font-size:12px; color:#10b981; margin-top:6px; font-weight:600;">
+                <div
+                  id="fileSelectedInfo"
+                  style="
+                    display: none;
+                    font-size: 12px;
+                    color: #10b981;
+                    margin-top: 6px;
+                    font-weight: 600;
+                  "
+                >
                   ✓ Selected file: <span id="fileSelectedName"></span>
                 </div>
               </div>
 
               <!-- OPTION 2: URL LINK -->
-              <div id="imageUrlInputGroup" class="image-input-pane" style="display:none;">
+              <div
+                id="imageUrlInputGroup"
+                class="image-input-pane"
+                style="display: none"
+              >
                 <input
                   type="url"
                   id="formProductImageUrl"
@@ -1078,15 +1131,40 @@
               <!-- LIVE IMAGE PREVIEW -->
               <div class="image-preview-wrapper" id="imagePreviewWrapper">
                 <div class="image-preview-box">
-                  <img id="imagePreviewImg" src="" alt="Product Preview" onerror="handlePreviewError()" />
+                  <img
+                    id="imagePreviewImg"
+                    src=""
+                    alt="Product Preview"
+                    onerror="handlePreviewError()"
+                  />
                   <div id="imagePreviewPlaceholder" class="preview-placeholder">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#94a3b8"
+                      stroke-width="1.8"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
                     <span>No image</span>
                   </div>
                 </div>
                 <div class="image-preview-meta">
-                  <span class="preview-badge" id="previewSourceBadge">No Image</span>
-                  <button type="button" class="btn-clear-img" id="btnClearImage" onclick="clearProductImage()">✕ Remove</button>
+                  <span class="preview-badge" id="previewSourceBadge"
+                    >No Image</span
+                  >
+                  <button
+                    type="button"
+                    class="btn-clear-img"
+                    id="btnClearImage"
+                    onclick="clearProductImage()"
+                  >
+                    ✕ Remove
+                  </button>
                 </div>
               </div>
             </div>
@@ -1474,7 +1552,9 @@
         if (!file) return;
 
         if (file.size > 5 * 1024 * 1024) {
-          alert("Image file size is too large. Please select an image under 5MB.");
+          alert(
+            "Image file size is too large. Please select an image under 5MB.",
+          );
           event.target.value = "";
           return;
         }
@@ -1511,7 +1591,10 @@
             img.style.display = "block";
           }
           if (placeholder) placeholder.style.display = "none";
-          if (badge) badge.textContent = sourceLabel || (src.startsWith("data:") ? "Uploaded File" : "Web URL");
+          if (badge)
+            badge.textContent =
+              sourceLabel ||
+              (src.startsWith("data:") ? "Uploaded File" : "Web URL");
         } else {
           if (img) {
             img.src = "";
