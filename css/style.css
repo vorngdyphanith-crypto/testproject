@@ -122,6 +122,28 @@ button:disabled,
   transform: none;
 }
 
+/* Category Filter Pills Safety Override */
+button.filter,
+.filter {
+  background: #ffffff;
+  color: #334155;
+  border: 1.5px solid #e2e8f0;
+}
+
+button.filter:hover,
+.filter:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+button.filter.active,
+.filter.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
 /* FOOTER */
 footer {
   background: #0f172a;
