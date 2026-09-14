@@ -100,15 +100,32 @@ nav b {
 }
 
 /* ================= FILTER ================= */
+/* ================= CATEGORY NAVBAR & FILTERS ================= */
 
 .filters {
     display: flex;
     align-items: center;
     gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 35px;
+    flex-wrap: wrap;
+    background: #ffffff;
+    padding: 14px 20px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
+/* Default pill style - NOT white, crisp dark slate text on sleek cool-grey */
+.filters .filter,
 .filter {
     border: 1px solid #ddd;
     background: white;
@@ -117,21 +134,74 @@ nav b {
     cursor: pointer;
     font-size: 14px;
     transition: 0.3s;
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 9px 20px !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px;
+    transition: all 0.22s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+.filters .filter:hover,
 .filter:hover {
     background: #111;
     color: white;
     border-color: #111;
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #1e293b !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
 }
 
+/* Active Category Pill */
+.filters .filter.active,
 .filter.active {
     background: #111;
     color: white;
     border-color: #111;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border-color: #0f172a !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28) !important;
+    transform: translateY(-1px);
 }
 
 /* Sort */
+.filters .filter.active::after,
+.filter.active::after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #d4af37;
+    border-radius: 50%;
+    margin-left: 6px;
+}
+
+/* Sort Container & Select */
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.sort-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+}
 
 #sort {
     margin-left: auto;
@@ -139,8 +209,58 @@ nav b {
     border: 1px solid #ddd;
     border-radius: 8px;
     background: white;
+    padding: 9px 36px 9px 16px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 9999px;
+    background: #e2e8f0;
+    color: #0f172a;
     font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    outline: none;
+    transition: all 0.22s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+#sort:hover {
+    border-color: #94a3b8;
+    background-color: #cbd5e1;
+}
+
+#sort:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 14px;
+    }
+    .filter-pills {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .filter-pills::-webkit-scrollbar {
+        display: none;
+    }
+    .sort-container {
+        margin-left: 0;
+        width: 100%;
+        justify-content: space-between;
+    }
+    #sort {
+        width: 100%;
+    }
 }
 
 /* ================= PRODUCT GRID ================= */
